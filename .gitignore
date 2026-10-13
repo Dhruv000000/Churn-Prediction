@@ -1,0 +1,42 @@
+# Virtual Environments
+backend/venv/
+venv/
+env/
+ENV/
+4_FULLSTACK_APP/backend/venv/
+
+# Node Modules & Frontend Builds
+frontend/node_modules/
+frontend/dist/
+4_FULLSTACK_APP/frontend/node_modules/
+4_FULLSTACK_APP/frontend/dist/
+node_modules/
+dist/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Local Environment Variables
+.env
+!.env.example
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.agent/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -163,15 +163,13 @@ npm run dev
 ---
 
 ## 🎓 Academic Documentation & Viva Preparation
-- **Comprehensive Project Report**: See [`PROJECT_REPORT_DWH_DM.md`](file:///c:/Users/Asus/OneDrive/Documents/Churn%20Prediction/PROJECT_REPORT_DWH_DM.md) for full mathematical definitions, Star Schema specifications, and results analysis.
-- **Viva Presentation Guide**: See [`VIVA_PRESENTATION_SCRIPT.md`](file:///c:/Users/Asus/OneDrive/Documents/Churn%20Prediction/VIVA_PRESENTATION_SCRIPT.md) for a minute-by-minute 5-minute presentation script and the Top 10 anticipated examiner questions with technical answers.
-- **Architectural Reference**: See [`1_DATA_WAREHOUSE/ARCHITECTURE_EXPLAINER.md`](file:///c:/Users/Asus/OneDrive/Documents/Churn%20Prediction/1_DATA_WAREHOUSE/ARCHITECTURE_EXPLAINER.md).
-- **ETL Lifecycle Reference**: See [`2_ETL_PIPELINE/ETL_EXPLAINER.md`](file:///c:/Users/Asus/OneDrive/Documents/Churn%20Prediction/2_ETL_PIPELINE/ETL_EXPLAINER.md).
-- **Data Mining Algorithmic Reference**: See [`3_MINING_ENGINE/MINING_EXPLAINER.md`](file:///c:/Users/Asus/OneDrive/Documents/Churn%20Prediction/3_MINING_ENGINE/MINING_EXPLAINER.md).
+- **Comprehensive Project Report**: See [`PROJECT_REPORT_DWH_DM.md`](PROJECT_REPORT_DWH_DM.md) for full mathematical definitions, Star Schema specifications, and results analysis.
+- **Viva Presentation Guide**: See [`VIVA_PRESENTATION_SCRIPT.md`](VIVA_PRESENTATION_SCRIPT.md) for a minute-by-minute 5-minute presentation script and the Top 10 anticipated examiner questions with technical answers.
+- **Architectural Reference**: See [`1_DATA_WAREHOUSE/ARCHITECTURE_EXPLAINER.md`](1_DATA_WAREHOUSE/ARCHITECTURE_EXPLAINER.md).
+- **ETL Lifecycle Reference**: See [`2_ETL_PIPELINE/ETL_EXPLAINER.md`](2_ETL_PIPELINE/ETL_EXPLAINER.md).
+- **Data Mining Algorithmic Reference**: See [`3_MINING_ENGINE/MINING_EXPLAINER.md`](3_MINING_ENGINE/MINING_EXPLAINER.md).
 
 ---
 
 ## 📜 License
 This project is open-source and available under the [MIT License](LICENSE).
-#   C h u r n - P r e d i c t i o n  
- 
