@@ -19,7 +19,7 @@ router = APIRouter(prefix="/api/mining", tags=["Data Mining & Machine Learning"]
 
 
 @router.get("/clusters", response_model=ClusterQueryResponse, summary="K-Means Clusters, Personas & Scatter Sample")
-def get_clusters(sample_size: int = Query(default=1000, ge=100, le=7043, description="Sample points for scatter plot")):
+def get_clusters(sample_size: int = Query(default=1000, ge=100, le=150000, description="Sample points for scatter plot")):
     """
     Returns:
     - Optimal K cluster centroids (Tenure Months vs. Monthly Charges)
@@ -45,15 +45,16 @@ def get_elbow_curve():
 
 
 @router.get("/metrics", response_model=ModelMetricsResponse, summary="Supervised Model Evaluation & Gini Importances")
-def get_model_metrics():
+def get_model_metrics(model: str = Query(default=None, description="Specific model to evaluate ('Random Forest', 'XGBoost', 'LightGBM', 'Logistic Regression')")):
     """
-    Returns holdout test metrics for the Random Forest classifier:
+    Returns holdout test metrics for classification algorithms:
     - ROC-AUC, Recall (Sensitivity), Precision, F1-Score, Accuracy
     - Complete 2x2 Confusion Matrix (TP, FP, TN, FN)
-    - Ranked Gini Feature Importances
+    - Ranked Feature Importances
+    - Comparative benchmark metrics across all standard algorithms
     """
     try:
-        return mining_service.get_model_metrics()
+        return mining_service.get_model_metrics(model_name=model)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch model evaluation metrics: {str(e)}")
 

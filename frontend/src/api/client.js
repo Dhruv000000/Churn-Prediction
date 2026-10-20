@@ -40,8 +40,11 @@ export const getElbowCurve = async () => {
   return response.data;
 };
 
-export const getModelMetrics = async () => {
-  const response = await api.get('/api/mining/metrics');
+export const getModelMetrics = async (modelName = null) => {
+  const url = modelName
+    ? `/api/mining/metrics?model=${encodeURIComponent(modelName)}`
+    : '/api/mining/metrics';
+  const response = await api.get(url);
   return response.data;
 };
 

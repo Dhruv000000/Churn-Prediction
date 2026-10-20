@@ -29,7 +29,8 @@ from feature_extractor import (
     get_classification_features
 )
 from kmeans_scratch import ScratchKMeans
-from churn_classifier import train_churn_model, save_classifier_artifacts
+from churn_classifier import train_multi_churn_models, train_churn_model, save_classifier_artifacts
+from clv_regression import train_clv_model, save_clv_artifacts
 
 
 def execute_pipeline():
@@ -87,21 +88,36 @@ def execute_pipeline():
     print(f"[DONE] K-Means Mining completed in {step2_time:.2f} seconds.")
 
     # -------------------------------------------------------------------------
-    # STEP 3: SUPERVISED RANDOM FOREST CHURN CLASSIFIER
     # -------------------------------------------------------------------------
-    print("\n>>> STEP 3: TRAINING SUPERVISED RANDOM FOREST CHURN CLASSIFIER...")
+    # STEP 3: SUPERVISED MULTI-ALGORITHM CHURN CLASSIFIER SUITE
+    # -------------------------------------------------------------------------
+    print("\n>>> STEP 3: TRAINING & BENCHMARKING MULTI-ALGORITHM CLASSIFIERS...")
     t0 = time.time()
-    clf, clf_metrics, feature_rankings = train_churn_model(
-        X_clf, y_clf, clf_feature_names, n_estimators=100, max_depth=8, random_state=42
+    trained_models, comparison, details, best_name = train_multi_churn_models(
+        X_clf, y_clf, clf_feature_names, random_state=42
     )
-    save_classifier_artifacts(clf, clf_metrics, feature_rankings, clf_feature_names)
+    save_classifier_artifacts(trained_models, comparison, details, clf_feature_names, best_name)
     step3_time = time.time() - t0
-    print(f"[DONE] Supervised Training completed in {step3_time:.2f} seconds.")
+    print(f"[DONE] Supervised Multi-Model Benchmarking completed in {step3_time:.2f} seconds.")
+
+    # -------------------------------------------------------------------------
+    # STEP 4: CONTINUOUS VALUE ESTIMATION (CLV RIDGE REGRESSION)
+    # -------------------------------------------------------------------------
+    print("\n>>> STEP 4: TRAINING CLV RIDGE REGRESSION MODEL (PROFIT GUARDRAIL)...")
+    t0 = time.time()
+    clv_reg, clv_metrics, clv_cols = train_clv_model(df_warehouse, alpha=1.0, random_state=42)
+    save_clv_artifacts(clv_reg, clv_metrics, clv_cols)
+    step4_time = time.time() - t0
+    print(f"[DONE] CLV Regression training completed in {step4_time:.2f} seconds.")
 
     # -------------------------------------------------------------------------
     # FINAL EXECUTIVE METRICS REPORT
     # -------------------------------------------------------------------------
     total_time = time.time() - total_start
+    best_detail = details[best_name]
+    best_metrics = best_detail["metrics"]
+    best_ranking = best_detail["all_feature_ranking"]
+
     print("\n" + "=" * 82)
     print("                    FINAL DATA MINING EXECUTION SUMMARY MATRIX")
     print("=" * 82)
@@ -115,12 +131,22 @@ def execute_pipeline():
     for p in personas:
         print(f"     * Cluster {p['cluster_id']}: {p['persona_name'].ljust(28)} ({p['cluster_pct']}% of base | Center: {p['centroid_tenure_months']} mos, ${p['centroid_monthly_charges']})")
     print("-" * 82)
-    print("  2. SUPERVISED CHURN CLASSIFIER (Random Forest Ensemble)")
-    print(f"     * Test ROC-AUC Score         : {clf_metrics['roc_auc']:.4f}")
-    print(f"     * Test Recall (Sensitivity)  : {clf_metrics['recall'] * 100:.2f}% (Churn capture rate)")
-    print(f"     * Test F1-Score              : {clf_metrics['f1_score'] * 100:.2f}%")
-    print(f"     * Test Accuracy              : {clf_metrics['accuracy'] * 100:.2f}%")
-    print(f"     * Top Predictive Feature     : {feature_rankings[0]['feature']} ({feature_rankings[0]['importance_pct']}%)")
+    print("  2. SUPERVISED ALGORITHM SUITE BENCHMARK")
+    for c in comparison:
+        champ_mark = " (Champion)" if c["is_best"] else ""
+        print(f"     * {c['model_name'].ljust(22)}: ROC-AUC = {c['roc_auc']:.4f} | Recall = {c['recall']*100:.2f}% | F1 = {c['f1_score']*100:.2f}% | Acc = {c['accuracy']*100:.2f}%{champ_mark}")
+    print("-" * 82)
+    print("  3. CONTINUOUS VALUE ESTIMATION (CLV Ridge Regression)")
+    print(f"     * Model Type                 : {clv_metrics['model_type']}")
+    print(f"     * R² Variance Explained      : {clv_metrics['r2_score']:.4f} ({clv_metrics['r2_score']*100:.2f}%)")
+    print(f"     * Mean Absolute Error (MAE)  : ${clv_metrics['mae']:.2f}")
+    print("-" * 82)
+    print("  4. EXPLAINABLE AI ROOT CAUSE ATTRIBUTION (TreeSHAP)")
+    print(f"     * Engine Architecture        : TreeSHAP / shap.TreeExplainer (Active Inference Attributions)")
+    print(f"     * Primary Driver Extraction  : Dynamic Per-Prediction Root Cause Diagnostics")
+    print("-" * 82)
+    print(f"  Champion Classifier Model       : {best_name}")
+    print(f"  Champion Top Predictive Feature : {best_ranking[0]['feature']} ({best_ranking[0]['importance_pct']}%)")
     print("-" * 82)
     print(f"  Total Pipeline Execution Time   : {total_time:.2f} seconds")
     print(f"  Model Artifacts Persisted In    : {SAVED_MODELS_DIR}")

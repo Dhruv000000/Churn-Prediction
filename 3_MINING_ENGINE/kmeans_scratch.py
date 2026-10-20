@@ -206,23 +206,23 @@ class ScratchKMeans:
             is_high_spend = charges >= mid_charges
 
             if is_high_spend and is_high_tenure:
-                name = "VIP Champions"
-                archetype = "High Spend / High Tenure"
+                name = "High-Value Power User"
+                archetype = "Enterprise / High Spend, High Tenure"
                 risk_level = "Low Risk (Core Assets)"
                 action = "Exclusive loyalty perks, dedicated support tier, long-term renewal incentives."
             elif is_high_spend and not is_high_tenure:
-                name = "Flight Risk Early Adopters"
-                archetype = "High Spend / Low Tenure"
+                name = "Price Sensitive"
+                archetype = "Price Sensitive / High Spend, Low Tenure"
                 risk_level = "Critical Risk (Primary Churn Culprit)"
-                action = "Proactive onboarding concierge, bill shock alerts, direct customer success check-ins."
+                action = "Proactive onboarding concierge, targeted price relief, direct customer success check-ins."
             elif not is_high_spend and is_high_tenure:
-                name = "Budget Loyalists"
-                archetype = "Low Spend / High Tenure"
+                name = "Budget Loyalist"
+                archetype = "Budget Conscious / Low Spend, High Tenure"
                 risk_level = "Low Risk (Stable Base)"
                 action = "Feature cross-selling (fiber optic, security addons), referral incentives."
             else:
-                name = "Casual Starters"
-                archetype = "Low Spend / Low Tenure"
+                name = "Infrequent User"
+                archetype = "Casual Starter / Low Spend, Low Tenure"
                 risk_level = "Medium Risk (Testing Services)"
                 action = "Educational product nurture campaigns, discount trial extensions."
 

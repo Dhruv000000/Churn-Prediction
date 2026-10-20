@@ -192,6 +192,27 @@ def load_phase(engine, df_clean: pd.DataFrame, batch_size: int = 1000, truncate:
 
     is_sqlite = engine.dialect.name == "sqlite"
 
+    # SQLite performance tuning for 100k+ rows
+    if is_sqlite:
+        with engine.begin() as conn:
+            conn.execute(text("PRAGMA synchronous = OFF;"))
+            conn.execute(text("PRAGMA journal_mode = MEMORY;"))
+            conn.execute(text("PRAGMA cache_size = 100000;"))
+
+    if truncate:
+        print("[TRANSACTION] Truncating Star Schema tables for clean idempotent load...")
+        with engine.begin() as conn:
+            if is_sqlite:
+                conn.execute(text("DELETE FROM fact_subscriptions;"))
+                conn.execute(text("DELETE FROM dim_customer;"))
+                conn.execute(text("DELETE FROM dim_service_plan;"))
+                conn.execute(text("DELETE FROM dim_billing;"))
+            else:
+                conn.execute(text("TRUNCATE TABLE fact_subscriptions RESTART IDENTITY CASCADE;"))
+                conn.execute(text("TRUNCATE TABLE dim_customer RESTART IDENTITY CASCADE;"))
+                conn.execute(text("TRUNCATE TABLE dim_service_plan RESTART IDENTITY CASCADE;"))
+                conn.execute(text("TRUNCATE TABLE dim_billing RESTART IDENTITY CASCADE;"))
+
     # Step 3.1: Populate Dim_Customer
     print("[LOAD DIMENSIONS] Staging & upserting Dim_Customer...")
     cust_cols = ["customer_id", "gender", "senior_citizen", "partner", "dependents"]
@@ -199,14 +220,17 @@ def load_phase(engine, df_clean: pd.DataFrame, batch_size: int = 1000, truncate:
 
     with engine.begin() as conn:
         if is_sqlite:
-            # Check existing customers in SQLite
-            existing_custs = pd.read_sql(text("SELECT customer_id FROM dim_customer;"), con=conn)
-            new_custs = dim_cust_df[~dim_cust_df["customer_id"].isin(existing_custs["customer_id"])]
+            if not truncate:
+                existing_custs = pd.read_sql(text("SELECT customer_id FROM dim_customer;"), con=conn)
+                new_custs = dim_cust_df[~dim_cust_df["customer_id"].isin(existing_custs["customer_id"])]
+            else:
+                new_custs = dim_cust_df
+
             if len(new_custs) > 0:
-                new_custs.to_sql("dim_customer", con=conn, if_exists="append", index=False)
+                new_custs.to_sql("dim_customer", con=conn, if_exists="append", index=False, chunksize=10000)
         else:
             conn.execute(text("CREATE TEMP TABLE stage_customer (LIKE dim_customer INCLUDING DEFAULTS) ON COMMIT DROP;"))
-            dim_cust_df.to_sql("stage_customer", con=conn, if_exists="append", index=False)
+            dim_cust_df.to_sql("stage_customer", con=conn, if_exists="append", index=False, chunksize=10000)
             conn.execute(text("""
                 INSERT INTO dim_customer (customer_id, gender, senior_citizen, partner, dependents)
                 SELECT s.customer_id, s.gender, s.senior_citizen, s.partner, s.dependents
@@ -358,6 +382,7 @@ def load_phase(engine, df_clean: pd.DataFrame, batch_size: int = 1000, truncate:
                     con=conn,
                     if_exists="append",
                     index=False,
+                    chunksize=2000,
                     method="multi"
                 )
                 print(f"   * Loaded batch {i + 1:,} - {min(i + batch_size, total_rows):,} of {total_rows:,} rows...")

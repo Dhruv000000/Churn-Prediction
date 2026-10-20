@@ -1,58 +1,58 @@
 {
   "optimal_k": 4,
-  "convergence_iterations": 10,
-  "final_wcss": 2845.3652071119172,
+  "convergence_iterations": 16,
+  "final_wcss": 42686.589353541654,
   "elbow_curve": {
-    "2": 7991.73,
-    "3": 4622.54,
-    "4": 2845.37,
-    "5": 2387.0,
-    "6": 1947.69
+    "2": 121989.38,
+    "3": 64969.55,
+    "4": 42686.59,
+    "5": 33040.34,
+    "6": 25408.03
   },
   "personas": [
     {
       "cluster_id": 0,
-      "persona_name": "Budget Loyalists",
-      "archetype": "Low Spend / High Tenure",
-      "risk_profile": "Low Risk (Stable Base)",
-      "recommended_action": "Feature cross-selling (fiber optic, security addons), referral incentives.",
-      "cluster_size": 1155,
-      "cluster_pct": 16.4,
-      "centroid_tenure_months": 54.1,
-      "centroid_monthly_charges": 34.03
+      "persona_name": "High-Value Power User",
+      "archetype": "Enterprise / High Spend, High Tenure",
+      "risk_profile": "Low Risk (Core Assets)",
+      "recommended_action": "Exclusive loyalty perks, dedicated support tier, long-term renewal incentives.",
+      "cluster_size": 34411,
+      "cluster_pct": 32.77,
+      "centroid_tenure_months": 56.6,
+      "centroid_monthly_charges": 79.63
     },
     {
       "cluster_id": 1,
-      "persona_name": "VIP Champions",
-      "archetype": "High Spend / High Tenure",
-      "risk_profile": "Low Risk (Core Assets)",
-      "recommended_action": "Exclusive loyalty perks, dedicated support tier, long-term renewal incentives.",
-      "cluster_size": 1952,
-      "cluster_pct": 27.72,
-      "centroid_tenure_months": 58.7,
-      "centroid_monthly_charges": 93.02
+      "persona_name": "Price Sensitive",
+      "archetype": "Price Sensitive / High Spend, Low Tenure",
+      "risk_profile": "Critical Risk (Primary Churn Culprit)",
+      "recommended_action": "Proactive onboarding concierge, targeted price relief, direct customer success check-ins.",
+      "cluster_size": 40195,
+      "cluster_pct": 38.28,
+      "centroid_tenure_months": 10.3,
+      "centroid_monthly_charges": 79.29
     },
     {
       "cluster_id": 2,
-      "persona_name": "Flight Risk Early Adopters",
-      "archetype": "High Spend / Low Tenure",
-      "risk_profile": "Critical Risk (Primary Churn Culprit)",
-      "recommended_action": "Proactive onboarding concierge, bill shock alerts, direct customer success check-ins.",
-      "cluster_size": 2204,
-      "cluster_pct": 31.29,
-      "centroid_tenure_months": 14.8,
-      "centroid_monthly_charges": 81.22
+      "persona_name": "Budget Loyalist",
+      "archetype": "Budget Conscious / Low Spend, High Tenure",
+      "risk_profile": "Low Risk (Stable Base)",
+      "recommended_action": "Feature cross-selling (fiber optic, security addons), referral incentives.",
+      "cluster_size": 13902,
+      "cluster_pct": 13.24,
+      "centroid_tenure_months": 56.8,
+      "centroid_monthly_charges": 27.93
     },
     {
       "cluster_id": 3,
-      "persona_name": "Casual Starters",
-      "archetype": "Low Spend / Low Tenure",
+      "persona_name": "Infrequent User",
+      "archetype": "Casual Starter / Low Spend, Low Tenure",
       "risk_profile": "Medium Risk (Testing Services)",
       "recommended_action": "Educational product nurture campaigns, discount trial extensions.",
-      "cluster_size": 1732,
-      "cluster_pct": 24.59,
-      "centroid_tenure_months": 10.5,
-      "centroid_monthly_charges": 32.47
+      "cluster_size": 16492,
+      "cluster_pct": 15.71,
+      "centroid_tenure_months": 10.0,
+      "centroid_monthly_charges": 27.53
     }
   ]
 }

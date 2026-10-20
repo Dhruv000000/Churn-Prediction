@@ -37,15 +37,30 @@ class CustomerPredictRequest(BaseModel):
     contract: str = Field(default="Month-to-month", description="'Month-to-month', 'One year', or 'Two year'")
     paperless_billing: str = Field(default="Yes", description="'Yes' or 'No'")
     payment_method: str = Field(default="Electronic check", description="Payment channel")
+    
+    # Model Selection
+    model_name: Optional[str] = Field(default="Random Forest", description="Classification algorithm to use ('Random Forest', 'XGBoost', 'LightGBM', 'Logistic Regression')")
 
 
 class CustomerPredictResponse(BaseModel):
     churn_probability: float = Field(..., description="Forecasted likelihood of churn (0.0 to 1.0)")
     churn_prediction: int = Field(..., description="1 = Likely to Churn, 0 = Likely to Retain")
-    churn_risk_tier: str = Field(..., description="'Low', 'Moderate', or 'High'")
+    churn_risk_tier: str = Field(..., description="'Low', 'Moderate', 'High', or 'Critical'")
     cluster_persona: str = Field(..., description="Matched behavioural retention persona")
     risk_factors: List[str] = Field(default_factory=list, description="Key drivers explaining prediction")
     recommended_retention_action: str = Field(..., description="Actionable intervention suggestion")
+    
+    # Secondary Multi-Algorithm Analytics Additions
+    predicted_clv: float = Field(default=0.0, description="Predicted Customer Lifetime Value ($) via Ridge Regression profit guardrail")
+    primary_churn_driver: str = Field(default="", description="Primary root-cause driver identified via TreeSHAP feature attribution")
+
+    # Churn-Probability-Based Dynamic Discount Engine
+    discount_percentage: float = Field(default=0.0, description="Targeted retention discount (0% to 30%)")
+    original_monthly_charges: float = Field(default=0.0, description="Current monthly billed amount ($)")
+    discounted_monthly_charges: float = Field(default=0.0, description="Newly calculated discounted bill ($)")
+    monthly_savings: float = Field(default=0.0, description="Customer savings per month ($)")
+    retention_tier_rationale: str = Field(default="", description="Business explanation of applied retention discount tier")
+    model_used: Optional[str] = Field(default="Random Forest", description="Machine learning algorithm executed")
 
 
 # -----------------------------------------------------------------------------
@@ -126,6 +141,18 @@ class FeatureImportanceItem(BaseModel):
     importance_pct: float
 
 
+class ModelComparisonItem(BaseModel):
+    model_key: str = Field(..., description="Machine-readable model identifier (e.g. 'random_forest', 'xgboost')")
+    model_name: str = Field(..., description="Human-readable model name (e.g. 'Random Forest', 'XGBoost')")
+    accuracy: float
+    precision: float
+    recall: float
+    f1_score: float
+    roc_auc: float
+    is_best: bool = False
+    notes: Optional[str] = None
+
+
 class ModelMetricsResponse(BaseModel):
     model_type: str
     accuracy: float
@@ -135,6 +162,11 @@ class ModelMetricsResponse(BaseModel):
     roc_auc: float
     confusion_matrix: Dict[str, int]
     top_features: List[FeatureImportanceItem]
+    models_comparison: Optional[List[ModelComparisonItem]] = Field(default_factory=list, description="Comparative benchmark metrics across all algorithms")
+    available_models: Optional[List[str]] = Field(default_factory=lambda: ["Random Forest", "XGBoost", "LightGBM", "Logistic Regression"])
+    selected_model: Optional[str] = Field(default="Random Forest")
+    test_samples: Optional[int] = None
+    train_samples: Optional[int] = None
 
 
 class RetrainResponse(BaseModel):

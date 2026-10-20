@@ -1,0 +1,18 @@
+{
+  "model_type": "Ridge Regression (L2 Regularized)",
+  "alpha": 1.0,
+  "r2_score": 0.9994,
+  "mae": 30.19,
+  "rmse": 48.39,
+  "training_duration_seconds": 0.02,
+  "test_samples": 21000,
+  "train_samples": 84000,
+  "coefficients": {
+    "tenure_months": 0.0035,
+    "monthly_charges": 0.0022,
+    "spend_history": 0.9999,
+    "contract_One year": -0.5769,
+    "contract_Two year": 0.3054
+  },
+  "intercept": 0.0698
+}
