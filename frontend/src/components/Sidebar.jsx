@@ -1,146 +1,79 @@
 import React from 'react';
-import {
-  Database,
-  Network,
-  AlertCircle,
-  Activity,
-  ShieldCheck,
-  Server,
-  Layers,
-  ChevronRight
-} from 'lucide-react';
+import { Database, Network, AlertCircle, Activity, Layers } from 'lucide-react';
 
 const navItems = [
-  {
-    id: 'olap',
-    label: 'OLAP Warehouse',
-    description: 'Star Schema & Rollups',
-    icon: Database,
-    color: 'text-cyan-400',
-    activeBg: 'bg-cyan-500/10 border-cyan-500/30 text-white',
-  },
-  {
-    id: 'clustering',
-    label: 'Clustering Studio',
-    description: 'K-Means++ & Personas',
-    icon: Network,
-    color: 'text-violet-400',
-    activeBg: 'bg-violet-500/10 border-violet-500/30 text-white',
-  },
-  {
-    id: 'predictor',
-    label: 'Churn Predictor',
-    description: 'Real-Time ML Forensics',
-    icon: AlertCircle,
-    color: 'text-rose-400',
-    activeBg: 'bg-rose-500/10 border-rose-500/30 text-white',
-  },
-  {
-    id: 'diagnostics',
-    label: 'Pipeline & Diagnostics',
-    description: 'ETL Health & Gini Rank',
-    icon: Activity,
-    color: 'text-emerald-400',
-    activeBg: 'bg-emerald-500/10 border-emerald-500/30 text-white',
-  },
+  { id: 'olap', label: 'OLAP Warehouse', description: 'Star Schema & Rollups', icon: Database },
+  { id: 'clustering', label: 'Clustering Studio', description: 'K-Means++ & Personas', icon: Network },
+  { id: 'predictor', label: 'Churn Predictor', description: 'Real-Time ML Forensics', icon: AlertCircle },
+  { id: 'diagnostics', label: 'Pipeline & Diagnostics', description: 'ETL Health & Gini Rank', icon: Activity },
 ];
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   return (
-    <aside className="w-60 flex-shrink-0 bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between h-screen sticky top-0 select-none">
-      {/* Top Branding */}
-      <div>
-        <div className="h-16 px-5 border-b border-zinc-800 flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-700/80 flex items-center justify-center shadow-inner">
-            <Layers className="w-5 h-5 text-cyan-400" />
+    <aside className="app-sidebar bg-white border-r border-slate-200 select-none flex flex-col justify-between">
+      <div className="sidebar-primary">
+        {/* Brand Header */}
+        <div className="sidebar-brand h-16 flex items-center gap-3 px-5 border-b border-slate-200 bg-white">
+          <div className="brand-mark w-9 h-9 rounded-xl flex items-center justify-center bg-indigo-50 border border-indigo-200 text-indigo-600 shadow-sm">
+            <Layers size={20} strokeWidth={2} />
           </div>
           <div>
-            <div className="text-sm font-black tracking-tight text-white flex items-center space-x-1.5">
-              <span>CHURN</span>
-              <span className="text-cyan-400">DWH</span>
+            <div className="brand-name text-slate-900 font-bold text-base tracking-tight leading-none">
+              Gone-ology <span className="text-indigo-600 text-xs font-semibold">DWH</span>
             </div>
-            <div className="text-[10px] font-mono tracking-widest uppercase text-zinc-500">
-              Enterprise Suite
+            <div className="brand-caption text-slate-400 font-mono text-[9px] font-semibold tracking-wider uppercase mt-1">
+              CHURN FORENSICS
             </div>
           </div>
         </div>
 
         {/* Section Label */}
-        <div className="px-5 pt-6 pb-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-            Analytical Modules
-          </span>
+        <div className="sidebar-section-label px-5 pt-5 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          ANALYTICAL WORKSPACE
         </div>
 
         {/* Navigation Items */}
-        <nav className="px-3 space-y-1.5">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
+        <nav className="sidebar-nav px-3 space-y-1" aria-label="Main navigation">
+          {navItems.map(({ id, label, description, icon: Icon }) => {
+            const isActive = activeTab === id;
             return (
               <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full group flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-left transition-all duration-150 ${
+                key={id}
+                type="button"
+                aria-current={isActive ? 'page' : undefined}
+                onClick={() => setActiveTab(id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${
                   isActive
-                    ? `${item.activeBg} font-semibold shadow-sm`
-                    : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+                    ? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200/80 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
                 }`}
               >
-                <div className="flex items-center space-x-3">
-                  <div
-                    className={`p-1.5 rounded-md ${
-                      isActive
-                        ? 'bg-zinc-900 text-white'
-                        : 'bg-zinc-900/50 text-zinc-400 group-hover:text-zinc-200'
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 ${isActive ? item.color : ''}`} />
-                  </div>
-                  <div>
-                    <div className={`text-xs ${isActive ? 'text-white' : 'text-zinc-300'}`}>
-                      {item.label}
-                    </div>
-                    <div className="text-[10px] text-zinc-500 leading-tight">
-                      {item.description}
-                    </div>
-                  </div>
+                <Icon
+                  size={18}
+                  strokeWidth={2}
+                  className={isActive ? 'text-indigo-600' : 'text-slate-400'}
+                />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs leading-tight font-medium truncate">{label}</span>
+                  <span className={`text-[10px] leading-tight truncate ${isActive ? 'text-indigo-600/80' : 'text-slate-400'}`}>
+                    {description}
+                  </span>
                 </div>
-                {isActive && (
-                  <ChevronRight className="w-3.5 h-3.5 text-zinc-400 opacity-80" />
-                )}
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Footer System Status */}
-      <div className="p-4 border-t border-zinc-800/80 bg-zinc-950/40">
-        <div className="p-3 rounded-lg bg-zinc-900/70 border border-zinc-800/80 space-y-2">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-zinc-400 flex items-center space-x-1.5">
-              <Server className="w-3 h-3 text-cyan-400" />
-              <span>DWH Engine</span>
-            </span>
-            <span className="text-[10px] font-mono text-zinc-300 bg-zinc-800 px-1.5 py-0.5 rounded">
-              Star Schema
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-zinc-400 flex items-center space-x-1.5">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" />
-              <span>Integrity</span>
-            </span>
-            <span className="text-[10px] font-mono text-emerald-400">
-              0 Orphans
-            </span>
-          </div>
-
-          <div className="pt-1 border-t border-zinc-800 text-[9px] text-zinc-500 font-mono text-center">
-            7,043 Accounts • K=4 Personas
-          </div>
+      {/* Footer Info Box */}
+      <div className="m-3 p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+        <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 font-mono">
+          WAREHOUSE ENGINE
+        </span>
+        <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11px]">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Star Schema Live</span>
+          <span className="ml-auto font-mono text-[10px] text-slate-400 font-normal">K=4 Personas</span>
         </div>
       </div>
     </aside>

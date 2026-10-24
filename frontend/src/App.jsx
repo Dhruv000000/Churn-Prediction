@@ -5,15 +5,18 @@ import OLAPWarehouse from './pages/OLAPWarehouse';
 import ClusteringStudio from './pages/ClusteringStudio';
 import ChurnPredictor from './pages/ChurnPredictor';
 import PipelineDiagnostics from './pages/PipelineDiagnostics';
+import Landing from './pages/Landing';
 import { checkHealth } from './api/client';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('olap');
   const [isConnected, setIsConnected] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showDashboard, setShowDashboard] = useState(true);
 
-  // Periodic health check
   useEffect(() => {
+    if (!showDashboard) return undefined;
+
     let isMounted = true;
     const verifyBackend = async () => {
       try {
@@ -34,25 +37,29 @@ export default function App() {
       isMounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [showDashboard]);
 
   const handleRetrained = () => {
     // Increment refresh key to trigger data refetches across views
     setRefreshKey((prev) => prev + 1);
   };
 
+  if (!showDashboard) {
+    return <Landing onLaunch={() => setShowDashboard(true)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-black text-white flex font-sans antialiased selection:bg-cyan-500/20 selection:text-cyan-300">
+    <div className="dashboard-shell antialiased">
       {/* 1. Sleek 240px Left Navigation Sidebar */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* 2. Main Application Area */}
-      <div className="flex-1 min-h-screen flex flex-col bg-black overflow-y-auto">
+      <div className="dashboard-main">
         {/* Top Header */}
         <Header isConnected={isConnected} onRetrained={handleRetrained} />
 
         {/* View Page Canvas */}
-        <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <main className="dashboard-canvas p-6 md:p-8 w-full min-w-0">
           {activeTab === 'olap' && <OLAPWarehouse key={`olap-${refreshKey}`} />}
           {activeTab === 'clustering' && <ClusteringStudio key={`clustering-${refreshKey}`} />}
           {activeTab === 'predictor' && <ChurnPredictor key={`predictor-${refreshKey}`} />}

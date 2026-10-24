@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RefreshCw, CheckCircle2, AlertCircle, Sparkles, Terminal } from 'lucide-react';
+import { RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { retrainPipeline } from '../api/client';
 
 export default function Header({ isConnected, onRetrained }) {
@@ -15,14 +15,14 @@ export default function Header({ isConnected, onRetrained }) {
       setRetrainResult({
         success: true,
         message: res.message || 'Pipeline retrained and hot-reloaded successfully',
-        duration: res.training_duration_seconds ? `${res.training_duration_seconds.toFixed(2)}s` : '1.4s',
+        duration: res.training_duration_seconds ? `${res.training_duration_seconds.toFixed(2)}s` : '1.4s'
       });
       if (onRetrained) onRetrained(res);
       setTimeout(() => setRetrainResult(null), 6000);
     } catch (err) {
       setRetrainResult({
         success: false,
-        message: err.response?.data?.detail || err.message || 'Failed to retrain pipeline',
+        message: err.response?.data?.detail || err.message || 'Failed to retrain pipeline'
       });
       setTimeout(() => setRetrainResult(null), 6000);
     } finally {
@@ -31,66 +31,70 @@ export default function Header({ isConnected, onRetrained }) {
   };
 
   return (
-    <header className="h-16 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 px-6 flex items-center justify-between sticky top-0 z-30">
-      {/* Left: Project Title & Badge */}
-      <div className="flex items-center space-x-3">
-        <h1 className="text-base font-black tracking-tight text-white uppercase flex items-center space-x-2">
-          <span>Enterprise Churn Forensics</span>
-        </h1>
-        <div className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[11px] font-mono font-medium text-cyan-400">
-          <Terminal className="w-3 h-3 text-cyan-400" />
-          <span>DWH + ML PIPELINE</span>
+    <header className="h-16 px-6 bg-white border-b border-slate-200 flex items-center justify-between gap-4 sticky top-0 z-20 shadow-xs">
+      {/* Title & Workspace Label */}
+      <div className="flex items-center gap-3">
+        <div>
+          <h1 className="text-sm font-bold text-slate-900 tracking-tight leading-tight">
+            Customer Intelligence & Forensics
+          </h1>
+          <p className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 mt-0.5">
+            ENTERPRISE CHURN DATA WAREHOUSE (105,000 SUBSCRIBERS)
+          </p>
         </div>
       </div>
 
-      {/* Right: Status Pill & Retrain Button */}
-      <div className="flex items-center space-x-4">
-        {/* Retrain Alert Pill if active */}
+      {/* Header Actions */}
+      <div className="flex items-center gap-3">
+        {/* Retraining Notification Banner */}
         {retrainResult && (
           <div
-            className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium animate-fadeIn ${
               retrainResult.success
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : 'bg-rose-50 text-rose-800 border-rose-200'
             }`}
+            role="status"
           >
             {retrainResult.success ? (
-              <CheckCircle2 className="w-3.5 h-3.5" />
+              <CheckCircle2 size={14} className="text-emerald-600" />
             ) : (
-              <AlertCircle className="w-3.5 h-3.5" />
+              <AlertCircle size={14} className="text-rose-600" />
             )}
             <span>
-              {retrainResult.success
-                ? `Retrained in ${retrainResult.duration}`
-                : 'Retrain Error'}
+              {retrainResult.success ? `Retrained in ${retrainResult.duration}` : retrainResult.message}
             </span>
           </div>
         )}
 
-        {/* Live Backend Indicator */}
+        {/* Backend API Connection Status Badge */}
         <div
-          className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono font-medium border ${
+          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium ${
             isConnected
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-400 animate-pulse'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+              : 'bg-rose-50 text-rose-700 border-rose-200/80'
           }`}
+          role="status"
         >
           <span
             className={`w-2 h-2 rounded-full ${
-              isConnected ? 'bg-emerald-400' : 'bg-rose-500'
+              isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
             }`}
           />
-          <span>{isConnected ? 'API Connected (Port 8000)' : 'API Disconnected'}</span>
+          <span className="font-mono text-[11px]">
+            {isConnected ? 'API: Connected (Port 8000)' : 'API: Disconnected'}
+          </span>
         </div>
 
-        {/* Retrain Action Button */}
+        {/* Retrain Pipeline Button */}
         <button
+          type="button"
           onClick={handleRetrain}
           disabled={retraining}
-          className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-zinc-900 border border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800 text-zinc-100 text-xs font-semibold tracking-wide transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.98] transition-all shadow-sm disabled:opacity-60 disabled:cursor-wait"
         >
-          <RefreshCw className={`w-3.5 h-3.5 text-cyan-400 ${retraining ? 'animate-spin' : ''}`} />
-          <span>{retraining ? 'Retraining Models...' : 'Retrain Pipeline'}</span>
+          <RefreshCw size={13} className={retraining ? 'animate-spin' : ''} />
+          <span>{retraining ? 'Retraining...' : 'Retrain Pipeline'}</span>
         </button>
       </div>
     </header>
