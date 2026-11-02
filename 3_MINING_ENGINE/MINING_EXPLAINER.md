@@ -1,117 +1,125 @@
 # Data Mining & Machine Learning Architecture Cheat Sheet
 ## Project: Enterprise Churn Forensics & Predictive Retention Warehouse
-### Module: Task 4 – Data Mining Engine & Predictive Retention Models
+### Module: Task 4 – Data Mining Engine, Predictive Models & Market Basket Analysis
 
 ---
 
-## 1. Machine Learning Architecture Overview
+## 1. Machine Learning & Mining Architecture Overview
 
-Our Data Mining Engine couples **Unsupervised Customer Segmentation** (from-scratch K-Means in pure NumPy) with **Supervised Predictive Classification** (Random Forest with balanced weighting) directly on analytical features extracted from our PostgreSQL/SQLite Star Schema.
+Our Data Mining Engine couples **Unsupervised Customer Segmentation** (from-scratch K-Means in pure NumPy), **Supervised Predictive Classification** (Champion Logistic Regression with StandardScaler & balanced weighting), and **Market Basket Analysis & Pattern Mining** (from-scratch Apriori algorithm) directly on analytical features extracted from our PostgreSQL/SQLite Star Schema.
 
 ```
-       +-------------------------------------------------------+
-       |   Analytical Star Schema Database (Warehouse Layer)   |
-       +-------------------------------------------------------+
-                                  |
-                                  v
-       +-------------------------------------------------------+
-       |   Feature Extractor (SQL Join & One-Hot Encoding)     |
-       +-------------------------------------------------------+
-                  /                                 \
-                 /                                   \
-                v                                     v
-+-------------------------------+   +------------------------------------+
-|  1. UNSUPERVISED MINING       |   |  2. SUPERVISED CLASSIFICATION      |
-|  - Pure NumPy ScratchKMeans   |   |  - Balanced Random Forest Ensemble |
-|  - Manual Z-Score Scaling     |   |  - Stratified 80/20 Train-Test     |
-|  - K-Means++ Initialization   |   |  - Evaluation: ROC-AUC, Recall, F1 |
-|  - WCSS Elbow Curve (K=2..6)  |   |  - Gini Impurity Feature Ranking   |
-|  - 4 Business Action Personas |   |  - Artifacts: churn_forest.pkl     |
-+-------------------------------+   +------------------------------------+
+       +-----------------------------------------------------------------+
+       |       Analytical Star Schema Database (Warehouse Layer)         |
+       +-----------------------------------------------------------------+
+                                       |
+                                       v
+       +-----------------------------------------------------------------+
+       |       Feature Extractor (SQL Join & One-Hot Encoding)           |
+       +-----------------------------------------------------------------+
+                 /                     |                       \
+                /                      |                        \
+               v                       v                         v
++-----------------------+  +------------------------+  +-------------------------+
+| 1. UNSUPERVISED       |  | 2. SUPERVISED          |  | 3. MARKET BASKET        |
+| - Pure NumPy K-Means  |  | - Champion Logistic Reg|  | - From-Scratch Apriori  |
+| - Z-Score Scaling     |  | - StandardScaler       |  | - Candidate Join (Lk-1) |
+| - K-Means++ Init      |  | - Balanced Weights     |  | - Downward Closure Prune|
+| - WCSS Elbow (K=2..6) |  | - Holdout ROC-AUC=0.87 |  | - Support, Conf, Lift   |
+| - 4 Business Personas |  | - Log-Odds Beta Coefs  |  | - Churn Pattern Mining  |
++-----------------------+  +------------------------+  +-------------------------+
 ```
 
 ---
 
-## 2. Deep-Dive Viva Talking Points (Evaluator Defense Guide)
+## 2. Market Basket Analysis & From-Scratch Apriori Deep-Dive
 
-### Point 1: Mathematical Formulation of Scratch K-Means & Lloyd's Convergence
+### Point 1: Mathematical Foundations of Association Rule Mining
+* **Transaction Representation:** Let $I = \{i_1, i_2, \dots, i_m\}$ be the complete item catalog of telecom service subscriptions ($m = 10$). A transaction $T \subseteq I$ is the set of affirmative services subscribed to by an individual customer.
+* **Support:** The fraction of total transactions $N$ in database $D$ containing itemset $X$:
+  $$\text{Support}(X) = \frac{\sigma(X)}{N} = \frac{|\{T \in D : X \subseteq T\}|}{|D|}$$
+* **Confidence:** The conditional probability that a customer subscribing to antecedent $A$ also subscribes to consequent $C$:
+  $$\text{Confidence}(A \rightarrow C) = P(C | A) = \frac{\text{Support}(A \cup C)}{\text{Support}(A)}$$
+* **Lift:** The ratio of observed co-occurrence frequency to the frequency expected under mutual independence:
+  $$\text{Lift}(A \rightarrow C) = \frac{P(A \cap C)}{P(A) \cdot P(C)} = \frac{\text{Confidence}(A \rightarrow C)}{\text{Support}(C)} = \frac{\text{Support}(A \cup C)}{\text{Support}(A) \times \text{Support}(C)}$$
+  - **$\text{Lift} > 1.0$:** Positive correlation / strong bundle affinity (e.g., Streaming TV and Streaming Movies).
+  - **$\text{Lift} = 1.0$:** Complete statistical independence ($P(A \cap C) = P(A)P(C)$).
+  - **$\text{Lift} < 1.0$:** Negative correlation / cannibalistic services (e.g., DSL and Fiber Optic).
+* **Leverage:** Absolute divergence from independence:
+  $$\text{Leverage}(A \rightarrow C) = \text{Support}(A \cup C) - (\text{Support}(A) \times \text{Support}(C))$$
+* **Conviction:** Sensitivity to rule implication failure:
+  $$\text{Conviction}(A \rightarrow C) = \frac{1 - \text{Support}(C)}{1 - \text{Confidence}(A \rightarrow C)}$$
+
+---
+
+### Point 2: The Apriori Property (Downward Closure Principle)
+* **Theorem:** *If an itemset is frequent, then all of its non-empty subsets must also be frequent.*
+  $$\forall X, Y \subseteq I : X \subseteq Y \implies \text{Support}(X) \ge \text{Support}(Y)$$
+* **Contrapositive (Pruning Principle):** *If an itemset $S$ is infrequent, then none of its supersets can ever be frequent.*
+  $$\text{Support}(S) < \text{min\_support} \implies \forall Y \supset S, \text{Support}(Y) < \text{min\_support}$$
+* **Algorithmic Execution in `apriori_scratch.py`:**
+  1. **Candidate Join Step ($L_{k-1} \bowtie L_{k-1}$):** Joins two frequent $(k-1)$-itemsets $p, q$ sharing their first $(k-2)$ items in lexicographical order:
+     $$p[:k-2] == q[:k-2] \implies c = p \cup q, \quad |c| = k$$
+  2. **Candidate Pruning Step:** For candidate $c$, check all $k$ possible $(k-1)$-subsets. If any subset $s \subset c \notin L_{k-1}$, **prune candidate $c$ immediately** without scanning the database!
+  3. **Vectorized Boolean Bitmask Support Counting:** Computes $\text{Count}(c) = \text{np.count\_nonzero}(\text{mask}_1 \ \& \ \text{mask}_2 \dots)$ across 105,000 transactions in $< 10$ milliseconds.
+
+---
+
+### Point 3: Worked Numerical Example with Real Warehouse Values
+Consider our 105,000-subscriber data warehouse:
+* Total Subscribers ($N$) = $105,000$
+* Subscribers with `DSL Internet` = $35,885 \implies \text{Support}(\text{DSL}) = \frac{35,885}{105,000} = 0.3418$ (34.18%)
+* Subscribers with `Phone Service` + `Streaming TV` = $36,220 \implies \text{Support}(\text{Phone} \cup \text{TV}) = \frac{36,220}{105,000} = 0.3450$ (34.50%)
+* Subscribers with `DSL` + `Phone` + `Streaming TV` = $15,939 \implies \text{Support}(\text{DSL} \cup \text{Phone} \cup \text{TV}) = \frac{15,939}{105,000} = 0.1518$ (15.18%)
+
+Now compute rule metrics for: **`DSL Internet` $\rightarrow$ `Phone Service` + `Streaming TV`**:
+$$\text{Support} = 0.1518 \quad (15.18\%)$$
+$$\text{Confidence} = \frac{\text{Support}(\text{DSL} \cup \text{Phone} \cup \text{TV})}{\text{Support}(\text{DSL})} = \frac{0.1518}{0.3418} = 0.4441 \quad (44.41\%)$$
+$$\text{Lift} = \frac{\text{Confidence}}{\text{Support}(\text{Phone} \cup \text{TV})} = \frac{0.4441}{0.3450} = 1.2872 \quad (1.29\text{x})$$
+**Business Interpretation:** A subscriber with DSL Internet is **1.29 times more likely** to also bundle Phone Service and Streaming TV than a randomly selected customer, with 44.41% rule confidence.
+
+---
+
+### Point 4: Retrospective Churn Association Analysis vs. Predictive Classification
+* **Academic Distinction:**
+  - **Predictive Classification (Machine Learning):** Inductive prospective scoring that outputs $P(\text{Churn} | \mathbf{x})$ for an unseen customer profile, requiring strict train/test holdout separation and non-leaking features.
+  - **Retrospective Association (Apriori Mining):** Descriptive historical co-occurrence mapping that discovers combinations frequently shared by customers who already churned or stayed.
+* **Top Churn Risk Bundle Discovered:**
+  $$\{\text{Contract: Month-to-month}, \text{Fiber Optic Internet}, \text{Payment: Electronic check}\} \rightarrow \text{Churned}$$
+  - $\text{Support} = 5.82\%$
+  - $\text{Confidence} = 78.15\%$
+  - $\text{Lift} = 2.78\text{x}$ (2.78 times higher churn rate than average customer)
+* **Top Retention Anchor Discovered:**
+  $$\{\text{Contract: Two year}, \text{Tech Support}\} \rightarrow \text{Retained}$$
+  - $\text{Support} = 6.18\%$
+  - $\text{Confidence} = 97.15\%$
+  - $\text{Lift} = 1.35\text{x}$ (97.15% retention rate)
+* **Viva Note:** *Association does NOT imply causation.* Having an electronic check does not directly cause a customer to cancel; rather, price-sensitive month-to-month subscribers with high fiber costs disproportionately select un-automated payment methods and face friction.
+
+---
+
+## 3. Supervised Classification: Champion Model Defense
+
+### Why Logistic Regression Over Tree Ensembles?
+1. **Empirical Superiority on Holdout:** Achieves holdout ROC-AUC of **0.8726** (vs Random Forest 0.8650, XGBoost 0.8717, LightGBM 0.8723).
+2. **Optimal Minority-Class Sensitivity:** Churn recall of **83.83%** (captures 4,947 out of 5,901 actual churners in holdout test). Tree models without aggressive class reweighting suffered lower recall (80.90%).
+3. **Parametric Log-Odds Interpretability:**
+   $$\ln\left(\frac{p}{1 - p}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_k x_k$$
+   Each standardized coefficient $\beta_i$ translates to an exact **Odds Ratio** ($e^{\beta_i}$). For example, `contract_Two year` has $\beta = -1.26$, meaning $e^{-1.26} = 0.28$ (a two-year contract slashes the odds of churn by 72%).
+4. **Global Convex Minimum:** Optimizing the cross-entropy loss function via L-BFGS is strictly convex with zero risk of bad local minima or hyperparameter over-tuning.
+5. **Production Latency:** Evaluates single-customer inference in $< 1$ millisecond.
+
+---
+
+## 4. Unsupervised K-Means++ Clustering Defense
+
+### Mathematical Formulation
 * **Objective Function (Inertia / WCSS):**
   $$J = \sum_{j=1}^K \sum_{x_i \in C_j} ||x_i - \mu_j||^2$$
-  where $\mu_j$ is the centroid of cluster $C_j$.
-* **The 2-Step Lloyd's Algorithm:**
-  1. **Expectation Step (Assignment):**
-     $$C_j^{(t)} = \left\{ x_i : ||x_i - \mu_j^{(t)}||^2 \le ||x_i - \mu_l^{(t)}||^2 \quad \forall l, 1 \le l \le K \right\}$$
-     In our code, this is calculated via vectorized NumPy broadcasting:
-     `distances = np.sqrt(np.sum((X[:, None, :] - centroids[None, :, :]) ** 2, axis=2))`
-  2. **Maximization Step (Centroid Update):**
-     $$\mu_j^{(t+1)} = \frac{1}{|C_j^{(t)}|} \sum_{x_i \in C_j^{(t)}} x_i$$
-* **Proof of Convergence:**
-  Because the number of possible partitions of $N$ points into $K$ clusters is finite ($S(N, K)$ Stirling numbers), and each step monotonically decreases or preserves the objective function $J$ ($\partial J / \partial \mu_j = 0$ at the mean), the algorithm is guaranteed to converge to a local minimum in a finite number of iterations.
-  Our implementation tests convergence using the Frobenius norm of centroid displacement:
-  $$||\mu^{(t+1)} - \mu^{(t)}||_F < tol \quad (1e-4)$$
-
----
-
-### Point 2: Why K-Means++ Over Random Centroid Initialization?
-* **The Flaw of Standard Forgy/Random Initialization:**
-  Picking $K$ points uniformly at random frequently places multiple centroids into the same dense cluster, trapping the model in suboptimal local minima.
-* **The K-Means++ Solution (Arthur & Vassilvitskii, 2007):**
-  1. Choose the first center $c_1$ uniformly at random from $X$.
-  2. For each remaining point $x$, compute $D(x)$ (the shortest Euclidean distance from $x$ to the closest centroid already chosen).
-  3. Choose the next center $c_i$ with probability proportional to the squared distance:
-     $$P(x) = \frac{D(x)^2}{\sum_{x' \in X} D(x')^2}$$
-* **Academic Significance:**
-  K-Means++ guarantees that the expected clustering error is mathematically bounded by:
+* **K-Means++ Initialization Bound (Arthur & Vassilvitskii, 2007):**
   $$E[J] \le 8(\ln K + 2) J_{OPT}$$
-  It achieves an $O(\log K)$-competitive approximation ratio, converging faster and with lower variance.
-
----
-
-### Point 3: Determining Optimal $K$ via the WCSS Elbow Method
-* As $K$ increases, WCSS naturally decreases (reaching 0 when $K = N$).
-* The **Elbow Criterion** searches for the point of diminishing marginal returns: where the second derivative of the WCSS curve $\Delta^2 \text{WCSS} / \Delta K^2$ reaches maximum curvature.
-* In our dataset (Tenure vs. Monthly Charges), an elbow appears distinctly at **$K = 4$**, partitioning subscribers into 4 intuitive commercial quadrants:
-  1. **VIP Champions** (High Tenure, High Spend) $\rightarrow$ Core business foundation.
-  2. **Flight Risk Early Adopters** (Low Tenure, High Spend) $\rightarrow$ Primary churn vulnerability.
-  3. **Budget Loyalists** (High Tenure, Low Spend) $\rightarrow$ Stable accounts, upsell candidates.
-  4. **Casual Starters** (Low Tenure, Low Spend) $\rightarrow$ New exploratory tier.
-
----
-
-### Point 4: Why Recall and ROC-AUC Over Raw Accuracy in Churn Prediction?
-* **Class Imbalance Reality:**
-  In telecom and SaaS datasets, only **26.54%** of customers churn, while **73.46%** stay.
-  A naive "dummy classifier" that always predicts *retained* achieves **73.46% accuracy** while catching **0% of churners**!
-* **The Asymmetric Cost of Errors:**
-  * **False Positive (Type I Error):** Predicting a retained customer will churn $\rightarrow$ Cost: A small discount or outreach email sent unnecessarily.
-  * **False Negative (Type II Error):** Predicting a churner will stay $\rightarrow$ Cost: The company permanently loses hundreds or thousands of dollars in lifetime revenue!
-* **Why Our Architecture Prioritizes Recall & ROC-AUC:**
-  * **Recall ($\frac{TP}{TP + FN}$):** Directly measures what percentage of actual churners the retention team successfully catches before they cancel.
-  * **ROC-AUC:** Measures the model's ability to rank high-risk customers higher than low-risk customers across all possible probability thresholds, immune to class imbalance.
-  * We utilized `class_weight='balanced'` in our Random Forest, which weights the loss inversely proportional to class frequencies:
-    $$w_1 = \frac{N}{2 \times N_{\text{churn}}} \approx 1.88, \quad w_0 = \frac{N}{2 \times N_{\text{retained}}} \approx 0.68$$
-
----
-
-### Point 5: How Gini Impurity Derives Feature Importance in Random Forest
-* At each split node $m$ in decision tree $T$, Gini impurity is:
-  $$G(m) = 1 - \sum_{k=0}^1 p_{mk}^2$$
-* The **Gini Impurity Decrease** $\Delta G(m)$ achieved by splitting on feature $j$ is:
-  $$\Delta G(m) = N_m G(m) - N_{L} G(L) - N_{R} G(R)$$
-* The total importance of feature $j$ across the ensemble of $B$ trees is the sum of impurity decreases normalized across all splits:
-  $$I(j) = \frac{1}{B} \sum_{T=1}^B \sum_{m \in T, \text{split}(m)=j} \Delta G(m)$$
-* **Key Enterprise Insight Discovered:**
-  Contract Type (`contract_Two year`, `contract_One year`) and `tenure_months` consistently occupy the top ranks, proving empirically that customer retention is driven by contractual lock-in and onboarding duration rather than demographics.
-
----
-
-## 3. Quick-Fire Viva Q&A
-
-* **Q: Why did you implement K-Means from scratch instead of just calling `sklearn.cluster.KMeans`?**
-  * *Answer:* Building the algorithm in pure NumPy demonstrates foundational mastery of the underlying mathematics: Z-Score vector normalization, K-Means++ probability distributions, vectorized Euclidean distance broadcasting, and convergence criteria under Frobenius norm displacement.
-
-* **Q: Why must you scale data before running K-Means?**
-  * *Answer:* Euclidean distance is scale-sensitive. In our dataset, `monthly_charges` ranges from $18 to $118, while `tenure_months` ranges from 0 to 72. If unscaled, variance in charges would dominate the distance metric, distorting cluster geometry.
-
-* **Q: What is the time complexity of your Scratch K-Means implementation?**
-  * *Answer:* The time complexity is $O(I \cdot K \cdot N \cdot D)$, where $I$ is iterations to convergence (~10-25), $K$ is number of clusters (4), $N$ is sample size (7,043), and $D$ is feature dimensionality (2). NumPy broadcasting computes all $N \times K$ distances in parallel C loops.
+* **Optimal K=4 Personas:**
+  1. **VIP Champions** (Tenure = 58.4 mos, Charges = $92.60) $\rightarrow$ High-value foundation.
+  2. **Flight Risk High Spenders** (Tenure = 8.2 mos, Charges = $84.10) $\rightarrow$ Priority churn mitigation.
+  3. **Budget Loyalists** (Tenure = 54.1 mos, Charges = $32.40) $\rightarrow$ Stable accounts, upsell candidates.
+  4. **Casual Starters** (Tenure = 7.9 mos, Charges = $31.80) $\rightarrow$ Early lifecycle nurturing.

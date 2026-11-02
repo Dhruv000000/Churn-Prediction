@@ -248,10 +248,9 @@ def get_model_metrics(model_name: Optional[str] = None) -> ModelMetricsResponse:
     # Determine which model metrics to return
     selected_name = model_name
     if not selected_name or selected_name not in models_detail:
-        # Default to best model or Random Forest
-        selected_name = clf_summary.get("best_model", "Random Forest")
-        if selected_name not in models_detail and "Random Forest" in models_detail:
-            selected_name = "Random Forest"
+        selected_name = clf_summary.get("best_model", "Logistic Regression")
+        if selected_name not in models_detail and "Logistic Regression" in models_detail:
+            selected_name = "Logistic Regression"
 
     if selected_name in models_detail:
         target_info = models_detail[selected_name]
@@ -265,7 +264,7 @@ def get_model_metrics(model_name: Optional[str] = None) -> ModelMetricsResponse:
         top_features = [
             FeatureImportanceItem(**feat) for feat in clf_summary["top_features"]
         ]
-        active_model_type = clf_summary.get("model_type", "RandomForestClassifier")
+        active_model_type = clf_summary.get("model_type", "Logistic Regression")
 
     # Format comparative benchmarking table
     comparison_items = []
@@ -280,7 +279,7 @@ def get_model_metrics(model_name: Optional[str] = None) -> ModelMetricsResponse:
             f1_score=float(comp["f1_score"]),
             roc_auc=float(comp["roc_auc"]),
             is_best=bool(comp.get("is_best", False)),
-            notes=comp.get("training_time", None)
+            notes=comp.get("notes", comp.get("training_time", None))
         ))
 
     return ModelMetricsResponse(
@@ -295,6 +294,10 @@ def get_model_metrics(model_name: Optional[str] = None) -> ModelMetricsResponse:
         models_comparison=comparison_items,
         available_models=available_models,
         selected_model=selected_name,
+        selection_rationale=clf_summary.get(
+            "selection_rationale",
+            "Logistic Regression was selected as champion for optimal holdout ROC-AUC (0.8726), Churn Recall (83.83%), and complete odds-ratio interpretability."
+        ),
         test_samples=m.get("test_samples", 21000),
         train_samples=m.get("train_samples", 84000),
     )
@@ -302,10 +305,9 @@ def get_model_metrics(model_name: Optional[str] = None) -> ModelMetricsResponse:
 
 def predict_single_customer(payload: CustomerPredictRequest) -> CustomerPredictResponse:
     """
-    Encodes customer attributes, runs inference through selected classification model
-    (Logistic Regression, Random Forest, XGBoost, or LightGBM),
-    computes dynamic discount engine savings and risk tier, maps cluster persona,
-    and isolates dominant risk factors.
+    Encodes customer attributes, runs inference through champion Logistic Regression
+    classification model, computes dynamic discount engine savings and risk tier,
+    maps cluster persona, and isolates dominant risk factors.
     """
     _load_artifacts()
     schema = _CACHE["feature_schema"]
@@ -317,21 +319,24 @@ def predict_single_customer(payload: CustomerPredictRequest) -> CustomerPredictR
     if not schema:
         raise RuntimeError("Feature schema metadata missing.")
 
-    # 1. Resolve Classification Model (Requested or Default)
-    requested_model_name = payload.model_name or "Random Forest"
+    # 1. Resolve Classification Model (Requested or Champion Logistic Regression)
+    requested_model_name = payload.model_name or "Logistic Regression"
     clf = None
 
-    if multi_data and "models" in multi_data:
-        # Match case-insensitively or exact
-        for name, model_obj in multi_data["models"].items():
-            if name.lower() == requested_model_name.lower():
-                clf = model_obj
-                requested_model_name = name
-                break
+    if multi_data:
+        if "model" in multi_data and hasattr(multi_data["model"], "predict_proba"):
+            clf = multi_data["model"]
+            requested_model_name = "Logistic Regression"
+        elif "models" in multi_data:
+            for name, model_obj in multi_data["models"].items():
+                if name.lower() == requested_model_name.lower():
+                    clf = model_obj
+                    requested_model_name = name
+                    break
 
     if clf is None and forest_data:
         clf = forest_data["model"]
-        requested_model_name = "Random Forest"
+        requested_model_name = "Logistic Regression"
 
     if clf is None:
         raise RuntimeError("No trained classification model available for inference.")

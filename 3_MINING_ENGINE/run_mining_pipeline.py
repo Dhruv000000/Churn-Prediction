@@ -3,8 +3,11 @@
 Enterprise Churn Forensics & Predictive Retention Warehouse
 Module:  3_MINING_ENGINE/run_mining_pipeline.py
 Purpose: Master Data Mining & Machine Learning Pipeline Orchestrator.
-         Sequentially executes Star Schema Feature Extraction, from-scratch K-Means Clustering,
-         and Supervised Random Forest Churn Classification.
+         Sequentially executes:
+         1. Feature Extraction from Kimball Star Schema.
+         2. From-Scratch K-Means++ Clustering (Pure NumPy) & Business Personas.
+         3. Supervised Champion Churn Classifier (Logistic Regression).
+         4. From-Scratch Apriori Market Basket & Churn Association Mining.
 """
 
 import sys
@@ -29,7 +32,8 @@ from feature_extractor import (
     get_classification_features
 )
 from kmeans_scratch import ScratchKMeans
-from churn_classifier import train_multi_churn_models, train_churn_model, save_classifier_artifacts
+from churn_classifier import train_churn_model
+from apriori_scratch import run_and_save_apriori_artifacts
 
 
 def execute_pipeline():
@@ -87,50 +91,35 @@ def execute_pipeline():
     print(f"[DONE] K-Means Mining completed in {step2_time:.2f} seconds.")
 
     # -------------------------------------------------------------------------
-    # STEP 3: SUPERVISED MULTI-ALGORITHM CHURN CLASSIFIER SUITE
+    # STEP 3: SUPERVISED PRIMARY CHURN CLASSIFIER (LOGISTIC REGRESSION)
     # -------------------------------------------------------------------------
-    print("\n>>> STEP 3: TRAINING & BENCHMARKING MULTI-ALGORITHM CLASSIFIERS...")
+    print("\n>>> STEP 3: TRAINING PRIMARY CHAMPION CHURN CLASSIFIER (LOGISTIC REGRESSION)...")
     t0 = time.time()
-    trained_models, comparison, details, best_name = train_multi_churn_models(
-        X_clf, y_clf, clf_feature_names, random_state=42
-    )
-    save_classifier_artifacts(trained_models, comparison, details, clf_feature_names, best_name)
+    train_churn_model(X_clf, y_clf, clf_feature_names, random_state=42)
     step3_time = time.time() - t0
-    print(f"[DONE] Supervised Multi-Model Benchmarking completed in {step3_time:.2f} seconds.")
+    print(f"[DONE] Champion Supervised Classification completed in {step3_time:.2f} seconds.")
 
     # -------------------------------------------------------------------------
-    # FINAL EXECUTIVE METRICS REPORT
+    # STEP 4: FROM-SCRATCH APRIORI MARKET BASKET & CHURN PATTERN MINING
+    # -------------------------------------------------------------------------
+    print("\n>>> STEP 4: EXECUTING FROM-SCRATCH APRIORI MARKET BASKET & CHURN MINING...")
+    t0 = time.time()
+    run_and_save_apriori_artifacts(df_warehouse, min_support=0.12, min_confidence=0.38, max_len=5)
+    step4_time = time.time() - t0
+    print(f"[DONE] Apriori Market Basket Mining completed in {step4_time:.2f} seconds.")
+
+    # -------------------------------------------------------------------------
+    # TOTAL PIPELINE SUMMARY
     # -------------------------------------------------------------------------
     total_time = time.time() - total_start
-    best_detail = details[best_name]
-    best_metrics = best_detail["metrics"]
-    best_ranking = best_detail["all_feature_ranking"]
-
     print("\n" + "=" * 82)
-    print("                    FINAL DATA MINING EXECUTION SUMMARY MATRIX")
-    print("=" * 82)
-    print(f"  Ingested Warehouse Fact Records : {len(df_warehouse):,} rows")
-    print(f"  Total Engineered Features       : {len(clf_feature_names)} features")
-    print("-" * 82)
-    print("  1. UNSUPERVISED CLUSTERING (K-Means from Scratch)")
-    print(f"     * Optimal Clusters (K)       : {kmeans.n_clusters}")
-    print(f"     * Final WCSS (Inertia)       : {kmeans.inertia_:,.2f}")
-    print(f"     * Convergence Iterations     : {kmeans.n_iter_} steps")
-    for p in personas:
-        print(f"     * Cluster {p['cluster_id']}: {p['persona_name'].ljust(28)} ({p['cluster_pct']}% of base | Center: {p['centroid_tenure_months']} mos, ${p['centroid_monthly_charges']})")
-    print("-" * 82)
-    print("  2. SUPERVISED ALGORITHM SUITE BENCHMARK")
-    for c in comparison:
-        champ_mark = " (Champion)" if c["is_best"] else ""
-        print(f"     * {c['model_name'].ljust(22)}: ROC-AUC = {c['roc_auc']:.4f} | Recall = {c['recall']*100:.2f}% | F1 = {c['f1_score']*100:.2f}% | Acc = {c['accuracy']*100:.2f}%{champ_mark}")
-    print("-" * 82)
-    print(f"  Champion Classifier Model       : {best_name}")
-    print(f"  Champion Top Predictive Feature : {best_ranking[0]['feature']} ({best_ranking[0]['importance_pct']}%)")
-    print("-" * 82)
-    print(f"  Total Pipeline Execution Time   : {total_time:.2f} seconds")
-    print(f"  Model Artifacts Persisted In    : {SAVED_MODELS_DIR}")
-    print("=" * 82)
-    print("  🎉 DATA MINING ENGINE PIPELINE FULLY VALIDATED AND PERSISTED!")
+    print("  🎉 MASTER MINING PIPELINE EXECUTION FINISHED SUCCESSFULLY!")
+    print(f"  * Total Execution Time : {total_time:.2f} seconds")
+    print(f"  * Step 1 (Feature Ext.): {step1_time:.2f}s")
+    print(f"  * Step 2 (K-Means++   ): {step2_time:.2f}s")
+    print(f"  * Step 3 (Logistic Reg): {step3_time:.2f}s")
+    print(f"  * Step 4 (Apriori MBA ): {step4_time:.2f}s")
+    print(f"  * Artifacts Persisted  : {SAVED_MODELS_DIR}")
     print("=" * 82)
 
 

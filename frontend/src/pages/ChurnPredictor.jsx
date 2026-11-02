@@ -92,7 +92,7 @@ const PRESET_SCENARIOS = [
 
 export default function ChurnPredictor() {
   const [form, setForm] = useState({
-    model_name: 'Random Forest',
+    model_name: 'Logistic Regression',
     tenure_months: 6,
     monthly_charges: 78.5,
     contract: 'Month-to-month',
@@ -218,26 +218,10 @@ export default function ChurnPredictor() {
           </h1>
         </div>
 
-        {/* Algorithm Selection Pills */}
-        <div className="flex items-center space-x-1.5 bg-zinc-900/80 p-1.5 rounded-xl border border-zinc-800/80">
-          <Cpu className="w-3.5 h-3.5 text-pink-400 ml-1.5 mr-0.5" />
-          <span className="text-[11px] font-semibold text-zinc-400 mr-1 hidden sm:inline">Engine:</span>
-          {ALGORITHM_OPTIONS.map((algo) => {
-            const isSelected = form.model_name === algo;
-            return (
-              <button
-                key={algo}
-                onClick={() => updateField('model_name', algo)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
-                  isSelected
-                    ? 'border-pink-500/50 bg-pink-500/20 text-pink-300 shadow-sm'
-                    : 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700'
-                }`}
-              >
-                {algo}
-              </button>
-            );
-          })}
+        {/* Champion Algorithm Badge */}
+        <div className="flex items-center space-x-2 bg-pink-500/10 border border-pink-500/30 px-3 py-1.5 rounded-xl text-xs font-mono text-pink-300">
+          <Cpu className="w-3.5 h-3.5 text-pink-400" />
+          <span>Champion Model: Logistic Regression (ROC-AUC 0.8726)</span>
         </div>
       </div>
 

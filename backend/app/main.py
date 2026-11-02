@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import dwh_router, mining_router
+from app.routers import dwh_router, mining_router, apriori_router
 
 # Load environment variables
 env_path = Path(__file__).resolve().parent.parent / ".env"
@@ -24,7 +24,11 @@ tags_metadata = [
     },
     {
         "name": "Data Mining & Machine Learning",
-        "description": "Pure NumPy K-Means clustering, WCSS Elbow Curve, Random Forest churn prediction, and retraining.",
+        "description": "Pure NumPy K-Means clustering, WCSS Elbow Curve, Logistic Regression champion churn prediction, and retraining.",
+    },
+    {
+        "name": "Market Basket Analysis (Apriori)",
+        "description": "From-scratch Apriori frequent itemset mining, association rules, retrospective churn patterns, and service recommendations.",
     },
     {
         "name": "System Health",
@@ -36,10 +40,10 @@ app = FastAPI(
     title="Enterprise Churn Forensics & Retention Warehouse API",
     description="""
 High-throughput analytical backend connecting a PostgreSQL/SQLite Star Schema, 
-a pure NumPy K-Means customer segmentation engine, and a supervised Random Forest 
-retention classifier to executive dashboards.
+a pure NumPy K-Means customer segmentation engine, a supervised Logistic Regression 
+champion retention classifier, and a from-scratch Apriori Market Basket Analysis engine.
     """,
-    version="1.0.0",
+    version="1.1.0",
     openapi_tags=tags_metadata,
 )
 
@@ -66,6 +70,7 @@ app.add_middleware(
 # -----------------------------------------------------------------------------
 app.include_router(dwh_router.router)
 app.include_router(mining_router.router)
+app.include_router(apriori_router.router)
 
 
 # -----------------------------------------------------------------------------
@@ -75,7 +80,7 @@ app.include_router(mining_router.router)
 def read_root():
     return {
         "service": "Enterprise Churn Forensics & Retention Warehouse API",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "status": "online",
         "documentation": "/docs",
         "endpoints": {
@@ -87,6 +92,12 @@ def read_root():
             "model_metrics": "/api/mining/metrics",
             "predict_churn": "/api/mining/predict",
             "retrain_pipeline": "/api/mining/retrain",
+            "apriori_summary": "/api/mining/apriori/summary",
+            "apriori_run": "/api/mining/apriori/run",
+            "apriori_itemsets": "/api/mining/apriori/itemsets",
+            "apriori_rules": "/api/mining/apriori/rules",
+            "apriori_churn_rules": "/api/mining/apriori/churn-rules",
+            "apriori_recommend": "/api/mining/apriori/recommend",
         }
     }
 
@@ -99,10 +110,3 @@ def health_check():
         "database_connected": True,
         "cors_origins": allowed_origins,
     }
-
-
-if __name__ == "__main__":
-    import uvicorn
-    host = os.getenv("APP_HOST", "0.0.0.0")
-    port = int(os.getenv("APP_PORT", 8000))
-    uvicorn.run("app.main:app", host=host, port=port, reload=True)

@@ -38,8 +38,8 @@ class CustomerPredictRequest(BaseModel):
     paperless_billing: str = Field(default="Yes", description="'Yes' or 'No'")
     payment_method: str = Field(default="Electronic check", description="Payment channel")
     
-    # Model Selection
-    model_name: Optional[str] = Field(default="Random Forest", description="Classification algorithm to use ('Random Forest', 'XGBoost', 'LightGBM', 'Logistic Regression')")
+    # Model Selection (Standardized on Champion Logistic Regression)
+    model_name: Optional[str] = Field(default="Logistic Regression", description="Classification algorithm ('Logistic Regression')")
 
 
 class CustomerPredictResponse(BaseModel):
@@ -56,7 +56,7 @@ class CustomerPredictResponse(BaseModel):
     discounted_monthly_charges: float = Field(default=0.0, description="Newly calculated discounted bill ($)")
     monthly_savings: float = Field(default=0.0, description="Customer savings per month ($)")
     retention_tier_rationale: str = Field(default="", description="Business explanation of applied retention discount tier")
-    model_used: Optional[str] = Field(default="Random Forest", description="Machine learning algorithm executed")
+    model_used: Optional[str] = Field(default="Logistic Regression", description="Machine learning algorithm executed")
 
 
 # -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class PaymentAnalysisItem(BaseModel):
 
 
 # -----------------------------------------------------------------------------
-# 3. DATA MINING SCHEMAS
+# 3. DATA MINING & CLUSTERING SCHEMAS
 # -----------------------------------------------------------------------------
 class CentroidItem(BaseModel):
     cluster_id: int
@@ -138,8 +138,8 @@ class FeatureImportanceItem(BaseModel):
 
 
 class ModelComparisonItem(BaseModel):
-    model_key: str = Field(..., description="Machine-readable model identifier (e.g. 'random_forest', 'xgboost')")
-    model_name: str = Field(..., description="Human-readable model name (e.g. 'Random Forest', 'XGBoost')")
+    model_key: str = Field(..., description="Machine-readable model identifier (e.g. 'logistic_regression')")
+    model_name: str = Field(..., description="Human-readable model name (e.g. 'Logistic Regression')")
     accuracy: float
     precision: float
     recall: float
@@ -158,9 +158,13 @@ class ModelMetricsResponse(BaseModel):
     roc_auc: float
     confusion_matrix: Dict[str, int]
     top_features: List[FeatureImportanceItem]
-    models_comparison: Optional[List[ModelComparisonItem]] = Field(default_factory=list, description="Comparative benchmark metrics across all algorithms")
-    available_models: Optional[List[str]] = Field(default_factory=lambda: ["Random Forest", "XGBoost", "LightGBM", "Logistic Regression"])
-    selected_model: Optional[str] = Field(default="Random Forest")
+    models_comparison: Optional[List[ModelComparisonItem]] = Field(default_factory=list, description="Champion model benchmark note")
+    available_models: Optional[List[str]] = Field(default_factory=lambda: ["Logistic Regression"])
+    selected_model: Optional[str] = Field(default="Logistic Regression")
+    selection_rationale: Optional[str] = Field(
+        default="Logistic Regression was chosen as the champion classifier due to superior ROC-AUC (0.8726), optimal Churn Recall (83.83%), and complete log-odds interpretability.",
+        description="Academic rationale for model selection"
+    )
     test_samples: Optional[int] = None
     train_samples: Optional[int] = None
 
@@ -170,3 +174,89 @@ class RetrainResponse(BaseModel):
     message: str
     training_duration_seconds: float
     updated_metrics: Dict[str, Any]
+
+
+# -----------------------------------------------------------------------------
+# 4. APRIORI MARKET BASKET & PATTERN MINING SCHEMAS
+# -----------------------------------------------------------------------------
+class AprioriRunRequest(BaseModel):
+    min_support: float = Field(default=0.12, ge=0.01, le=1.0, description="Minimum itemset support threshold (0.01 to 1.0)")
+    min_confidence: float = Field(default=0.38, ge=0.05, le=1.0, description="Minimum rule confidence threshold (0.05 to 1.0)")
+    max_len: int = Field(default=5, ge=1, le=10, description="Maximum itemset length to mine (1 to 10)")
+
+
+class FrequentItemsetItem(BaseModel):
+    itemset: List[str]
+    size: int
+    support: float
+    support_pct: float
+    count: int
+
+
+class AssociationRuleItem(BaseModel):
+    antecedent: List[str]
+    consequent: List[str]
+    support: float
+    confidence: float
+    lift: float
+    leverage: float
+    conviction: float
+    strength: str
+    rule_text: str
+
+
+class ChurnRuleItem(BaseModel):
+    antecedent: List[str]
+    outcome: str
+    support: float
+    confidence: float
+    lift: float
+    rule_text: str
+    churn_risk_level: Optional[str] = None
+    retention_strength: Optional[str] = None
+
+
+class AprioriSummaryResponse(BaseModel):
+    total_transactions: int
+    total_frequent_itemsets: int
+    total_rules: int
+    min_support: float
+    min_confidence: float
+    max_len: int
+    execution_time_seconds: float
+    itemset_counts_by_size: Dict[int, int]
+    top_itemsets: List[FrequentItemsetItem]
+    top_rules: List[AssociationRuleItem]
+    available_services: List[str]
+
+
+class ChurnPatternsResponse(BaseModel):
+    total_churn_rules: int
+    total_retention_rules: int
+    min_support: float
+    min_confidence: float
+    execution_time_seconds: float
+    churn_rules: List[ChurnRuleItem]
+    retention_rules: List[ChurnRuleItem]
+
+
+class RecommendationRequest(BaseModel):
+    active_services: List[str] = Field(default_factory=list, description="Currently subscribed telecom services")
+    min_confidence: Optional[float] = Field(default=0.35, ge=0.05, le=1.0)
+    min_lift: Optional[float] = Field(default=1.05, ge=0.5)
+
+
+class RecommendationItem(BaseModel):
+    recommended_service: str
+    triggering_antecedent: List[str]
+    confidence: float
+    lift: float
+    support: float
+    strategy: str
+    rationale: str
+
+
+class RecommendationResponse(BaseModel):
+    active_services: List[str]
+    recommendations_count: int
+    recommendations: List[RecommendationItem]

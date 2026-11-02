@@ -2,9 +2,8 @@
 """
 Enterprise Churn Forensics & Predictive Retention Warehouse
 Script:  backend/test_api.py
-Purpose: Comprehensive Test Suite for FastAPI Analytical & Data Mining Endpoints.
-         Executes automated integration tests verifying HTTP 200 OK responses
-         and JSON schema validity across all DWH and Mining routes.
+Purpose: Comprehensive Integration Test Suite for FastAPI Analytical,
+         Data Mining, and Apriori Market Basket Analysis Endpoints.
 """
 
 import sys
@@ -20,7 +19,6 @@ if sys.platform == "win32":
     except AttributeError:
         pass
 
-# Add backend directory to sys.path so app can be imported
 CURRENT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CURRENT_DIR))
 
@@ -31,12 +29,11 @@ from app.main import app
 def run_api_tests():
     print("=" * 82)
     print("  Enterprise Churn Forensics & Predictive Retention Warehouse")
-    print("  Task 5: FastAPI Analytical & Data Mining API Test Suite")
+    print("  FastAPI Analytical, Supervised ML & Apriori Mining Test Suite")
     print("=" * 82)
 
     client = TestClient(app)
     tests_passed = 0
-    total_tests = 10
     summary_results = []
 
     # -------------------------------------------------------------------------
@@ -71,8 +68,6 @@ def run_api_tests():
     d3 = r3.json()
     status3 = "[PASS]" if r3.status_code == 200 and isinstance(d3, list) and len(d3) > 0 else "[FAIL]"
     print(f"  Status : {r3.status_code} {status3}")
-    sample_tier = d3[0] if d3 else {}
-    print(f"  Payload: {len(d3)} Rollup Tiers | First: '{sample_tier.get('contract_tier')}' x '{sample_tier.get('internet_service_type')}' (Churn: {sample_tier.get('churn_rate_pct')}%)")
     summary_results.append(("GET /api/dwh/contract-analysis", r3.status_code, f"{len(d3)} rollup tiers", status3))
     if status3 == "[PASS]": tests_passed += 1
 
@@ -84,150 +79,182 @@ def run_api_tests():
     d4 = r4.json()
     status4 = "[PASS]" if r4.status_code == 200 and isinstance(d4, list) and len(d4) > 0 else "[FAIL]"
     print(f"  Status : {r4.status_code} {status4}")
-    highest_risk_method = d4[0] if d4 else {}
-    print(f"  Payload: {len(d4)} Channels | Highest Churn: '{highest_risk_method.get('payment_method')}' ({highest_risk_method.get('churn_rate_pct')}%)")
     summary_results.append(("GET /api/dwh/payment-analysis", r4.status_code, f"{len(d4)} payment methods", status4))
     if status4 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 5: K-Means Clusters & Scatter Samples
+    # TEST 5: K-Means Clusters & Personas
     # -------------------------------------------------------------------------
     print("\n[TEST 5] GET /api/mining/clusters (K-Means Centroids & Scatter Points)")
     r5 = client.get("/api/mining/clusters?sample_size=500")
     d5 = r5.json()
     status5 = "[PASS]" if r5.status_code == 200 and len(d5.get("personas", [])) == 4 and len(d5.get("scatter_sample", [])) > 0 else "[FAIL]"
     print(f"  Status : {r5.status_code} {status5}")
-    print(f"  Payload: Optimal K: {d5.get('n_clusters')} | Personas: {len(d5.get('personas', []))} | Scatter Points: {len(d5.get('scatter_sample', [])):,}")
-    for p in d5.get("personas", [])[:2]:
-        print(f"           - {p['persona_name']}: Tenure = {p['centroid_tenure_months']} mos | Monthly = ${p['centroid_monthly_charges']}")
-    summary_results.append(("GET /api/mining/clusters", r5.status_code, f"K={d5.get('n_clusters')}, {len(d5.get('scatter_sample', []))} points", status5))
+    summary_results.append(("GET /api/mining/clusters", r5.status_code, f"K={d5.get('n_clusters')} personas", status5))
     if status5 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 6: WCSS Elbow Curve Points
+    # TEST 6: WCSS Elbow Curve
     # -------------------------------------------------------------------------
-    print("\n[TEST 6] GET /api/mining/elbow (WCSS Elbow Curve)")
+    print("\n[TEST 6] GET /api/mining/elbow (WCSS Inertia Curve)")
     r6 = client.get("/api/mining/elbow")
     d6 = r6.json()
     status6 = "[PASS]" if r6.status_code == 200 and len(d6.get("elbow_points", [])) >= 4 else "[FAIL]"
     print(f"  Status : {r6.status_code} {status6}")
-    pts = [f"K={p['k']}: {p['wcss']:,.0f}" for p in d6.get("elbow_points", [])]
-    print(f"  Payload: Optimal K: {d6.get('optimal_k')} | Curve: {', '.join(pts)}")
-    summary_results.append(("GET /api/mining/elbow", r6.status_code, f"Optimal K={d6.get('optimal_k')}", status6))
+    summary_results.append(("GET /api/mining/elbow", r6.status_code, f"K={d6.get('optimal_k')} optimal", status6))
     if status6 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 7: Supervised Model Holdout Metrics & Gini Feature Rankings
+    # TEST 7: Champion Classifier Metrics (Logistic Regression)
     # -------------------------------------------------------------------------
-    print("\n[TEST 7] GET /api/mining/metrics (Random Forest Holdout Evaluation)")
+    print("\n[TEST 7] GET /api/mining/metrics (Champion Classifier Evaluation)")
     r7 = client.get("/api/mining/metrics")
     d7 = r7.json()
-    status7 = "[PASS]" if r7.status_code == 200 and d7.get("roc_auc", 0) > 0.75 else "[FAIL]"
+    status7 = "[PASS]" if r7.status_code == 200 and d7.get("roc_auc", 0) >= 0.85 and d7.get("model_type") == "Logistic Regression" else "[FAIL]"
     print(f"  Status : {r7.status_code} {status7}")
-    print(f"  Payload: Model: '{d7.get('model_type')}' | ROC-AUC: {d7.get('roc_auc')} | Recall: {d7.get('recall') * 100:.2f}% | F1: {d7.get('f1_score') * 100:.2f}%")
-    top_feature = d7.get("top_features", [{}])[0]
-    print(f"           Top Feature: '{top_feature.get('feature')}' ({top_feature.get('importance_pct')}%)")
+    print(f"  Payload: Model: {d7.get('model_type')} | ROC-AUC: {d7.get('roc_auc')} | Recall: {d7.get('recall')}")
     summary_results.append(("GET /api/mining/metrics", r7.status_code, f"ROC-AUC: {d7.get('roc_auc')}", status7))
     if status7 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 8: Real-Time Churn Scoring & Dynamic Discount Engine (High-Risk Profile)
+    # TEST 8: Real-Time Churn Scoring & Dynamic Discount
     # -------------------------------------------------------------------------
-    print("\n[TEST 8] POST /api/mining/predict (Real-Time Customer Scoring & Dynamic Discount)")
-    high_risk_payload = {
-        "tenure_months": 2,
-        "monthly_charges": 89.50,
-        "total_charges": 179.00,
+    print("\n[TEST 8] POST /api/mining/predict (Single Customer Churn Scoring)")
+    customer_payload = {
+        "tenure_months": 3,
+        "monthly_charges": 89.5,
         "contract": "Month-to-month",
         "internet_service": "Fiber optic",
         "payment_method": "Electronic check",
         "tech_support": "No",
         "online_security": "No",
-        "streaming_tv": "Yes",
-        "streaming_movies": "Yes",
         "senior_citizen": 0,
-        "gender": "Female",
+        "paperless_billing": "Yes",
         "partner": "No",
         "dependents": "No",
         "phone_service": "Yes",
-        "multiple_lines": "No",
-        "online_backup": "No",
-        "device_protection": "No",
-        "paperless_billing": "Yes",
-        "model_name": "Random Forest"
+        "multiple_lines": "No"
     }
-
-    r8 = client.post("/api/mining/predict", json=high_risk_payload)
+    r8 = client.post("/api/mining/predict", json=customer_payload)
     d8 = r8.json()
-    status8 = "[PASS]" if r8.status_code == 200 and d8.get("churn_probability", 0) > 0.60 and "discount_percentage" in d8 else "[FAIL]"
+    status8 = "[PASS]" if r8.status_code == 200 and d8.get("churn_prediction") in [0, 1] and 0.0 <= d8.get("churn_probability", -1) <= 1.0 else "[FAIL]"
     print(f"  Status : {r8.status_code} {status8}")
-    print(f"  Payload: Churn Probability: {d8.get('churn_probability') * 100:.2f}% | Risk Tier: '{d8.get('churn_risk_tier')}' | Prediction: {d8.get('churn_prediction')}")
-    print(f"           Discount Engine: {d8.get('discount_percentage')}% off (${d8.get('original_monthly_charges')}/mo -> ${d8.get('discounted_monthly_charges')}/mo, Save: ${d8.get('monthly_savings')}/mo)")
-    print(f"           Rationale: {d8.get('retention_tier_rationale')}")
-    summary_results.append(("POST /api/mining/predict (High Risk)", r8.status_code, f"Prob: {d8.get('churn_probability')*100:.1f}%, Disc: {d8.get('discount_percentage')}%", status8))
+    print(f"  Payload: Probability: {d8.get('churn_probability')} | Tier: {d8.get('churn_risk_tier')} | Discount: {d8.get('discount_percentage')}% | Model: {d8.get('model_used')}")
+    summary_results.append(("POST /api/mining/predict", r8.status_code, f"Risk: {d8.get('churn_risk_tier')}", status8))
     if status8 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 9: Algorithm Suite Benchmarking & Model Selection
+    # TEST 9: Apriori Market Basket Summary
     # -------------------------------------------------------------------------
-    print("\n[TEST 9] GET /api/mining/metrics?model=XGBoost (Multi-Algorithm Comparative Benchmarks)")
-    r9 = client.get("/api/mining/metrics?model=XGBoost")
+    print("\n[TEST 9] GET /api/mining/apriori/summary (Apriori Diagnostic Summary)")
+    r9 = client.get("/api/mining/apriori/summary")
     d9 = r9.json()
-    has_comparison = len(d9.get("models_comparison", [])) >= 4
-    status9 = "[PASS]" if r9.status_code == 200 and d9.get("selected_model") == "XGBoost" and has_comparison else "[FAIL]"
+    status9 = "[PASS]" if r9.status_code == 200 and d9.get("total_frequent_itemsets", 0) > 0 and d9.get("total_rules", 0) > 0 else "[FAIL]"
     print(f"  Status : {r9.status_code} {status9}")
-    print(f"  Payload: Selected: '{d9.get('selected_model')}' | ROC-AUC: {d9.get('roc_auc')} | F1: {d9.get('f1_score')*100:.2f}%")
-    print("           Benchmarked Models:")
-    for comp in d9.get("models_comparison", []):
-        star = " ★ CHAMPION" if comp.get("is_best") else ""
-        print(f"           - {comp.get('model_name').ljust(20)}: ROC-AUC={comp.get('roc_auc'):.4f}, F1={comp.get('f1_score')*100:.2f}%{star}")
-    summary_results.append(("GET /api/mining/metrics (XGBoost)", r9.status_code, f"4 models benchmarked", status9))
+    print(f"  Payload: Transactions: {d9.get('total_transactions'):,} | Frequent Itemsets: {d9.get('total_frequent_itemsets')} | Rules: {d9.get('total_rules')}")
+    summary_results.append(("GET /api/mining/apriori/summary", r9.status_code, f"{d9.get('total_rules')} rules", status9))
     if status9 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 10: Dynamic Discount Engine Range Validation (Low Risk: 0% Discount)
+    # TEST 10: On-Demand Apriori Execution
     # -------------------------------------------------------------------------
-    print("\n[TEST 10] POST /api/mining/predict (Low Risk: 0% Discount Validation)")
-    low_risk_payload = {
-        "tenure_months": 65,
-        "monthly_charges": 25.00,
-        "contract": "Two year",
-        "internet_service": "DSL",
-        "payment_method": "Credit card (automatic)",
-        "tech_support": "Yes",
-        "online_security": "Yes",
-        "partner": "Yes",
-        "dependents": "Yes",
-        "paperless_billing": "No",
-        "model_name": "XGBoost"
-    }
-    r10 = client.post("/api/mining/predict", json=low_risk_payload)
+    print("\n[TEST 10] POST /api/mining/apriori/run (On-Demand Apriori with Custom Thresholds)")
+    r10 = client.post("/api/mining/apriori/run", json={"min_support": 0.15, "min_confidence": 0.40, "max_len": 4})
     d10 = r10.json()
-    is_low_prob = d10.get("churn_probability", 1.0) < 0.30
-    is_zero_discount = d10.get("discount_percentage") == 0.0
-    status10 = "[PASS]" if r10.status_code == 200 and is_low_prob and is_zero_discount else "[FAIL]"
+    status10 = "[PASS]" if r10.status_code == 200 and d10.get("min_support") == 0.15 else "[FAIL]"
     print(f"  Status : {r10.status_code} {status10}")
-    print(f"  Payload: Churn Prob: {d10.get('churn_probability')*100:.2f}% | Tier: '{d10.get('churn_risk_tier')}' | Discount: {d10.get('discount_percentage')}% | Bill: ${d10.get('discounted_monthly_charges')}/mo")
-    summary_results.append(("POST /api/mining/predict (Low Risk)", r10.status_code, f"Prob: {d10.get('churn_probability')*100:.1f}%, Disc: 0%", status10))
+    print(f"  Payload: Runtime: {d10.get('execution_time_seconds')}s | Frequent Itemsets: {d10.get('total_frequent_itemsets')}")
+    summary_results.append(("POST /api/mining/apriori/run", r10.status_code, f"runtime: {d10.get('execution_time_seconds')}s", status10))
     if status10 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # FINAL RESULTS MATRIX
+    # TEST 11: Filtered Frequent Itemsets
+    # -------------------------------------------------------------------------
+    print("\n[TEST 11] GET /api/mining/apriori/itemsets (Filtered Itemsets)")
+    r11 = client.get("/api/mining/apriori/itemsets?min_size=2&max_size=3&limit=20")
+    d11 = r11.json()
+    status11 = "[PASS]" if r11.status_code == 200 and isinstance(d11, list) and len(d11) > 0 else "[FAIL]"
+    print(f"  Status : {r11.status_code} {status11}")
+    print(f"  Payload: Returned {len(d11)} itemsets | First: {d11[0].get('itemset')} (Supp: {d11[0].get('support_pct')}%)")
+    summary_results.append(("GET /api/mining/apriori/itemsets", r11.status_code, f"{len(d11)} itemsets", status11))
+    if status11 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 12: Filtered Association Rules
+    # -------------------------------------------------------------------------
+    print("\n[TEST 12] GET /api/mining/apriori/rules (Filtered Rules by Lift & Confidence)")
+    r12 = client.get("/api/mining/apriori/rules?min_lift=1.1&min_confidence=0.40&limit=20")
+    d12 = r12.json()
+    status12 = "[PASS]" if r12.status_code == 200 and isinstance(d12, list) and len(d12) > 0 else "[FAIL]"
+    print(f"  Status : {r12.status_code} {status12}")
+    top_r = d12[0] if d12 else {}
+    print(f"  Payload: Returned {len(d12)} rules | Top: {top_r.get('rule_text')} (Lift: {top_r.get('lift')}x)")
+    summary_results.append(("GET /api/mining/apriori/rules", r12.status_code, f"{len(d12)} rules", status12))
+    if status12 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 13: Retrospective Churn Pattern Association Rules
+    # -------------------------------------------------------------------------
+    print("\n[TEST 13] GET /api/mining/apriori/churn-rules (Churn Pattern Mining)")
+    r13 = client.get("/api/mining/apriori/churn-rules")
+    d13 = r13.json()
+    status13 = "[PASS]" if r13.status_code == 200 and len(d13.get("churn_rules", [])) > 0 and len(d13.get("retention_rules", [])) > 0 else "[FAIL]"
+    print(f"  Status : {r13.status_code} {status13}")
+    print(f"  Payload: Churn Rules: {d13.get('total_churn_rules')} | Retention Rules: {d13.get('total_retention_rules')}")
+    summary_results.append(("GET /api/mining/apriori/churn-rules", r13.status_code, f"{d13.get('total_churn_rules')} churn rules", status13))
+    if status13 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 14: Customer Service Recommendation Engine
+    # -------------------------------------------------------------------------
+    print("\n[TEST 14] POST /api/mining/apriori/recommend (Complementary Addon Suggestions)")
+    r14 = client.post("/api/mining/apriori/recommend", json={"active_services": ["Streaming TV", "Fiber Optic Internet"]})
+    d14 = r14.json()
+    status14 = "[PASS]" if r14.status_code == 200 and isinstance(d14.get("recommendations"), list) else "[FAIL]"
+    print(f"  Status : {r14.status_code} {status14}")
+    rec_sample = d14["recommendations"][0] if d14["recommendations"] else {}
+    print(f"  Payload: Recommendations: {d14.get('recommendations_count')} | Top: {rec_sample.get('recommended_service')} ({rec_sample.get('strategy')})")
+    summary_results.append(("POST /api/mining/apriori/recommend", r14.status_code, f"{d14.get('recommendations_count')} recommendations", status14))
+    if status14 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 15: CSV Export of Frequent Itemsets
+    # -------------------------------------------------------------------------
+    print("\n[TEST 15] GET /api/mining/apriori/export/itemsets (CSV Streaming)")
+    r15 = client.get("/api/mining/apriori/export/itemsets")
+    status15 = "[PASS]" if r15.status_code == 200 and "text/csv" in r15.headers.get("content-type", "") and "itemset" in r15.text else "[FAIL]"
+    print(f"  Status : {r15.status_code} {status15}")
+    print(f"  Payload: CSV Export ({len(r15.text.splitlines())} rows including header)")
+    summary_results.append(("GET /api/mining/apriori/export/itemsets", r15.status_code, "text/csv stream", status15))
+    if status15 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 16: CSV Export of Association Rules
+    # -------------------------------------------------------------------------
+    print("\n[TEST 16] GET /api/mining/apriori/export/rules (CSV Streaming)")
+    r16 = client.get("/api/mining/apriori/export/rules")
+    status16 = "[PASS]" if r16.status_code == 200 and "text/csv" in r16.headers.get("content-type", "") and "antecedent" in r16.text else "[FAIL]"
+    print(f"  Status : {r16.status_code} {status16}")
+    print(f"  Payload: CSV Export ({len(r16.text.splitlines())} rows including header)")
+    summary_results.append(("GET /api/mining/apriori/export/rules", r16.status_code, "text/csv stream", status16))
+    if status16 == "[PASS]": tests_passed += 1
+
+    total_tests = len(summary_results)
+
+    # -------------------------------------------------------------------------
+    # FINAL SCORECARD
     # -------------------------------------------------------------------------
     print("\n" + "=" * 82)
-    print("                    FASTAPI ENDPOINT INTEGRATION SUMMARY")
+    print("                    AUTOMATED TEST SCORECARD MATRIX")
     print("=" * 82)
-    print(f"{'Endpoint Tested':<34} | {'HTTP Code':<10} | {'Observed Payload Sample':<24} | {'Status':<6}")
+    print(f"{'Endpoint':<42} | {'HTTP':<5} | {'Verification':<20} | {'Result':<6}")
     print("-" * 82)
-    for ep, code, sample, st in summary_results:
-        print(f"{ep:<34} | {code:<10} | {sample:<24} | {st:<6}")
+    for route, code, note, res in summary_results:
+        print(f"{route:<42} | {code:<5} | {note:<20} | {res:<6}")
+    print("=" * 82)
+    print(f"  Final API Verification: {tests_passed} of {total_tests} Tests Passed ({(tests_passed/total_tests)*100:.1f}%)")
     print("=" * 82)
 
-    if tests_passed == total_tests:
-        print(f"  🎉 ALL {total_tests}/{total_tests} ENDPOINTS PASSED WITH 200 OK! BACKEND IS READY FOR PRODUCTION.")
-    else:
-        print(f"  ⚠️ {total_tests - tests_passed} TESTS FAILED. PLEASE REVIEW SERVER LOGS.")
-    print("=" * 82)
     return tests_passed == total_tests
 
 

@@ -4,6 +4,7 @@ import Header from './components/Header';
 import OLAPWarehouse from './pages/OLAPWarehouse';
 import ClusteringStudio from './pages/ClusteringStudio';
 import ChurnPredictor from './pages/ChurnPredictor';
+import MarketBasketStudio from './pages/MarketBasketStudio';
 import PipelineDiagnostics from './pages/PipelineDiagnostics';
 import Landing from './pages/Landing';
 import { checkHealth } from './api/client';
@@ -50,7 +51,7 @@ export default function App() {
 
   return (
     <div className="dashboard-shell antialiased">
-      {/* 1. Sleek 240px Left Navigation Sidebar */}
+      {/* 1. Sleek Left Navigation Sidebar */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* 2. Main Application Area */}
@@ -63,6 +64,7 @@ export default function App() {
           {activeTab === 'olap' && <OLAPWarehouse key={`olap-${refreshKey}`} />}
           {activeTab === 'clustering' && <ClusteringStudio key={`clustering-${refreshKey}`} />}
           {activeTab === 'predictor' && <ChurnPredictor key={`predictor-${refreshKey}`} />}
+          {activeTab === 'apriori' && <MarketBasketStudio key={`apriori-${refreshKey}`} />}
           {activeTab === 'diagnostics' && <PipelineDiagnostics key={`diagnostics-${refreshKey}`} />}
         </main>
       </div>

@@ -1,0 +1,1824 @@
+{
+  "market_basket": {
+    "total_transactions": 105000,
+    "total_frequent_itemsets": 49,
+    "total_rules": 95,
+    "min_support": 0.15,
+    "min_confidence": 0.4,
+    "max_len": 4,
+    "execution_time_seconds": 0.0025,
+    "itemset_counts_by_size": {
+      "1": 10,
+      "2": 26,
+      "3": 13
+    },
+    "top_itemsets": [
+      {
+        "itemset": [
+          "Phone Service"
+        ],
+        "size": 1,
+        "support": 0.9044,
+        "support_pct": 90.44,
+        "count": 94961
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet"
+        ],
+        "size": 1,
+        "support": 0.4394,
+        "support_pct": 43.94,
+        "count": 46134
+      },
+      {
+        "itemset": [
+          "Multiple Lines"
+        ],
+        "size": 1,
+        "support": 0.4185,
+        "support_pct": 41.85,
+        "count": 43942
+      },
+      {
+        "itemset": [
+          "Streaming Movies"
+        ],
+        "size": 1,
+        "support": 0.392,
+        "support_pct": 39.2,
+        "count": 41159
+      },
+      {
+        "itemset": [
+          "Streaming TV"
+        ],
+        "size": 1,
+        "support": 0.3821,
+        "support_pct": 38.21,
+        "count": 40123
+      },
+      {
+        "itemset": [
+          "Online Backup"
+        ],
+        "size": 1,
+        "support": 0.3432,
+        "support_pct": 34.32,
+        "count": 36035
+      },
+      {
+        "itemset": [
+          "DSL Internet"
+        ],
+        "size": 1,
+        "support": 0.3422,
+        "support_pct": 34.22,
+        "count": 35934
+      },
+      {
+        "itemset": [
+          "Device Protection"
+        ],
+        "size": 1,
+        "support": 0.3367,
+        "support_pct": 33.67,
+        "count": 35355
+      },
+      {
+        "itemset": [
+          "Tech Support"
+        ],
+        "size": 1,
+        "support": 0.2921,
+        "support_pct": 29.21,
+        "count": 30668
+      },
+      {
+        "itemset": [
+          "Online Security"
+        ],
+        "size": 1,
+        "support": 0.2826,
+        "support_pct": 28.26,
+        "count": 29677
+      },
+      {
+        "itemset": [
+          "Multiple Lines",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.4185,
+        "support_pct": 41.85,
+        "count": 43942
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.3974,
+        "support_pct": 39.74,
+        "count": 41722
+      },
+      {
+        "itemset": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "size": 2,
+        "support": 0.3534,
+        "support_pct": 35.34,
+        "count": 37112
+      },
+      {
+        "itemset": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "size": 2,
+        "support": 0.3449,
+        "support_pct": 34.49,
+        "count": 36213
+      },
+      {
+        "itemset": [
+          "Online Backup",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.3106,
+        "support_pct": 31.06,
+        "count": 32612
+      },
+      {
+        "itemset": [
+          "DSL Internet",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.3091,
+        "support_pct": 30.91,
+        "count": 32453
+      },
+      {
+        "itemset": [
+          "Device Protection",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.3051,
+        "support_pct": 30.51,
+        "count": 32040
+      },
+      {
+        "itemset": [
+          "Phone Service",
+          "Tech Support"
+        ],
+        "size": 2,
+        "support": 0.2639,
+        "support_pct": 26.39,
+        "count": 27711
+      },
+      {
+        "itemset": [
+          "Online Security",
+          "Phone Service"
+        ],
+        "size": 2,
+        "support": 0.2551,
+        "support_pct": 25.51,
+        "count": 26783
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet",
+          "Streaming Movies"
+        ],
+        "size": 2,
+        "support": 0.22,
+        "support_pct": 22.0,
+        "count": 23105
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet",
+          "Streaming TV"
+        ],
+        "size": 2,
+        "support": 0.2141,
+        "support_pct": 21.41,
+        "count": 22484
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet",
+          "Online Backup"
+        ],
+        "size": 2,
+        "support": 0.193,
+        "support_pct": 19.3,
+        "count": 20268
+      },
+      {
+        "itemset": [
+          "Streaming Movies",
+          "Streaming TV"
+        ],
+        "size": 2,
+        "support": 0.1924,
+        "support_pct": 19.24,
+        "count": 20202
+      },
+      {
+        "itemset": [
+          "Device Protection",
+          "Fiber Optic Internet"
+        ],
+        "size": 2,
+        "support": 0.1886,
+        "support_pct": 18.86,
+        "count": 19807
+      },
+      {
+        "itemset": [
+          "Fiber Optic Internet",
+          "Multiple Lines"
+        ],
+        "size": 2,
+        "support": 0.1834,
+        "support_pct": 18.34,
+        "count": 19259
+      }
+    ],
+    "top_rules": [
+      {
+        "antecedent": [
+          "DSL Internet"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "support": 0.1518,
+        "confidence": 0.4436,
+        "lift": 1.2861,
+        "leverage": 0.0338,
+        "conviction": 1.1773,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet -> Then Phone Service + Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "consequent": [
+          "DSL Internet"
+        ],
+        "support": 0.1518,
+        "confidence": 0.4401,
+        "lift": 1.2861,
+        "leverage": 0.0338,
+        "conviction": 1.1749,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming TV -> Then DSL Internet"
+      },
+      {
+        "antecedent": [
+          "DSL Internet",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.1518,
+        "confidence": 0.4911,
+        "lift": 1.2853,
+        "leverage": 0.0337,
+        "conviction": 1.2142,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet + Phone Service -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.1736,
+        "confidence": 0.4911,
+        "lift": 1.2851,
+        "leverage": 0.0385,
+        "conviction": 1.214,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming Movies -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "support": 0.1736,
+        "confidence": 0.4542,
+        "lift": 1.2851,
+        "leverage": 0.0385,
+        "conviction": 1.1846,
+        "strength": "Moderate",
+        "rule_text": "If Streaming TV -> Then Phone Service + Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Device Protection"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "support": 0.1529,
+        "confidence": 0.4542,
+        "lift": 1.285,
+        "leverage": 0.0339,
+        "conviction": 1.1845,
+        "strength": "Moderate",
+        "rule_text": "If Device Protection -> Then Phone Service + Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Device Protection"
+        ],
+        "support": 0.1529,
+        "confidence": 0.4327,
+        "lift": 1.285,
+        "leverage": 0.0339,
+        "conviction": 1.1691,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming Movies -> Then Device Protection"
+      },
+      {
+        "antecedent": [
+          "DSL Internet"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.168,
+        "confidence": 0.4909,
+        "lift": 1.2846,
+        "leverage": 0.0372,
+        "conviction": 1.2136,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Streaming TV"
+        ],
+        "consequent": [
+          "DSL Internet"
+        ],
+        "support": 0.168,
+        "confidence": 0.4396,
+        "lift": 1.2846,
+        "leverage": 0.0372,
+        "conviction": 1.1738,
+        "strength": "Moderate",
+        "rule_text": "If Streaming TV -> Then DSL Internet"
+      },
+      {
+        "antecedent": [
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1924,
+        "confidence": 0.5035,
+        "lift": 1.2845,
+        "leverage": 0.0426,
+        "conviction": 1.2246,
+        "strength": "Moderate",
+        "rule_text": "If Streaming TV -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.1924,
+        "confidence": 0.4908,
+        "lift": 1.2845,
+        "leverage": 0.0426,
+        "conviction": 1.2135,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "support": 0.1751,
+        "confidence": 0.5102,
+        "lift": 1.2841,
+        "leverage": 0.0387,
+        "conviction": 1.2305,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Fiber Optic Internet + Phone Service"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1751,
+        "confidence": 0.4407,
+        "lift": 1.2841,
+        "leverage": 0.0387,
+        "conviction": 1.1743,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet + Phone Service -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1736,
+        "confidence": 0.5032,
+        "lift": 1.2838,
+        "leverage": 0.0384,
+        "conviction": 1.224,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming TV -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "support": 0.1736,
+        "confidence": 0.4428,
+        "lift": 1.2838,
+        "leverage": 0.0384,
+        "conviction": 1.1757,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Phone Service + Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Online Backup",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.1751,
+        "confidence": 0.5638,
+        "lift": 1.2832,
+        "leverage": 0.0386,
+        "conviction": 1.2852,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup + Phone Service -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Online Security"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.1593,
+        "confidence": 0.5637,
+        "lift": 1.2829,
+        "leverage": 0.0351,
+        "conviction": 1.2849,
+        "strength": "Moderate",
+        "rule_text": "If Online Security -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Device Protection"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1692,
+        "confidence": 0.5024,
+        "lift": 1.2818,
+        "leverage": 0.0372,
+        "conviction": 1.222,
+        "strength": "Moderate",
+        "rule_text": "If Device Protection -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Device Protection"
+        ],
+        "support": 0.1692,
+        "confidence": 0.4316,
+        "lift": 1.2818,
+        "leverage": 0.0372,
+        "conviction": 1.1669,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Device Protection"
+      },
+      {
+        "antecedent": [
+          "DSL Internet"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1719,
+        "confidence": 0.5024,
+        "lift": 1.2817,
+        "leverage": 0.0378,
+        "conviction": 1.2219,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "DSL Internet"
+        ],
+        "support": 0.1719,
+        "confidence": 0.4386,
+        "lift": 1.2817,
+        "leverage": 0.0378,
+        "conviction": 1.1717,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then DSL Internet"
+      },
+      {
+        "antecedent": [
+          "DSL Internet"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "support": 0.155,
+        "confidence": 0.4528,
+        "lift": 1.2812,
+        "leverage": 0.034,
+        "conviction": 1.1816,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet -> Then Phone Service + Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "DSL Internet"
+        ],
+        "support": 0.155,
+        "confidence": 0.4385,
+        "lift": 1.2812,
+        "leverage": 0.034,
+        "conviction": 1.1714,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming Movies -> Then DSL Internet"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.193,
+        "confidence": 0.5625,
+        "lift": 1.2801,
+        "leverage": 0.0422,
+        "conviction": 1.2813,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.193,
+        "confidence": 0.4393,
+        "lift": 1.2801,
+        "leverage": 0.0422,
+        "conviction": 1.1715,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1721,
+        "confidence": 0.5016,
+        "lift": 1.2796,
+        "leverage": 0.0376,
+        "conviction": 1.2199,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1721,
+        "confidence": 0.4392,
+        "lift": 1.2796,
+        "leverage": 0.0376,
+        "conviction": 1.1711,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "support": 0.1552,
+        "confidence": 0.4521,
+        "lift": 1.2792,
+        "leverage": 0.0339,
+        "conviction": 1.1801,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Phone Service + Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1552,
+        "confidence": 0.439,
+        "lift": 1.2792,
+        "leverage": 0.0339,
+        "conviction": 1.1708,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming Movies -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "DSL Internet",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.155,
+        "confidence": 0.5014,
+        "lift": 1.2791,
+        "leverage": 0.0338,
+        "conviction": 1.2194,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet + Phone Service -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "support": 0.1514,
+        "confidence": 0.441,
+        "lift": 1.2788,
+        "leverage": 0.033,
+        "conviction": 1.172,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Phone Service + Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1514,
+        "confidence": 0.4389,
+        "lift": 1.2788,
+        "leverage": 0.033,
+        "conviction": 1.1705,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming TV -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.1677,
+        "confidence": 0.4886,
+        "lift": 1.2786,
+        "leverage": 0.0365,
+        "conviction": 1.2082,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1677,
+        "confidence": 0.4388,
+        "lift": 1.2786,
+        "leverage": 0.0365,
+        "conviction": 1.1704,
+        "strength": "Moderate",
+        "rule_text": "If Streaming TV -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Device Protection",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1529,
+        "confidence": 0.5012,
+        "lift": 1.2785,
+        "leverage": 0.0333,
+        "conviction": 1.2188,
+        "strength": "Moderate",
+        "rule_text": "If Device Protection + Phone Service -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "DSL Internet"
+        ],
+        "consequent": [
+          "Online Backup"
+        ],
+        "support": 0.1502,
+        "confidence": 0.4388,
+        "lift": 1.2785,
+        "leverage": 0.0327,
+        "conviction": 1.1703,
+        "strength": "Moderate",
+        "rule_text": "If DSL Internet -> Then Online Backup"
+      },
+      {
+        "antecedent": [
+          "Online Backup"
+        ],
+        "consequent": [
+          "DSL Internet"
+        ],
+        "support": 0.1502,
+        "confidence": 0.4375,
+        "lift": 1.2785,
+        "leverage": 0.0327,
+        "conviction": 1.1695,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup -> Then DSL Internet"
+      },
+      {
+        "antecedent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.1985,
+        "confidence": 0.5615,
+        "lift": 1.2781,
+        "leverage": 0.0432,
+        "conviction": 1.2786,
+        "strength": "Moderate",
+        "rule_text": "If Phone Service + Streaming Movies -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet"
+        ],
+        "consequent": [
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "support": 0.1985,
+        "confidence": 0.4517,
+        "lift": 1.2781,
+        "leverage": 0.0432,
+        "conviction": 1.1793,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet -> Then Phone Service + Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.22,
+        "confidence": 0.5614,
+        "lift": 1.2776,
+        "leverage": 0.0478,
+        "conviction": 1.2781,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.22,
+        "confidence": 0.5008,
+        "lift": 1.2776,
+        "leverage": 0.0478,
+        "conviction": 1.218,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Device Protection"
+        ],
+        "consequent": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "support": 0.1708,
+        "confidence": 0.5072,
+        "lift": 1.2765,
+        "leverage": 0.037,
+        "conviction": 1.223,
+        "strength": "Moderate",
+        "rule_text": "If Device Protection -> Then Fiber Optic Internet + Phone Service"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Device Protection"
+        ],
+        "support": 0.1708,
+        "confidence": 0.4298,
+        "lift": 1.2765,
+        "leverage": 0.037,
+        "conviction": 1.1633,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet + Phone Service -> Then Device Protection"
+      },
+      {
+        "antecedent": [
+          "Streaming TV"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.2141,
+        "confidence": 0.5604,
+        "lift": 1.2754,
+        "leverage": 0.0462,
+        "conviction": 1.2752,
+        "strength": "Moderate",
+        "rule_text": "If Streaming TV -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.2141,
+        "confidence": 0.4874,
+        "lift": 1.2754,
+        "leverage": 0.0462,
+        "conviction": 1.2053,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Online Backup",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Streaming TV"
+        ],
+        "support": 0.1514,
+        "confidence": 0.4873,
+        "lift": 1.2753,
+        "leverage": 0.0327,
+        "conviction": 1.2052,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup + Phone Service -> Then Streaming TV"
+      },
+      {
+        "antecedent": [
+          "Device Protection"
+        ],
+        "consequent": [
+          "Fiber Optic Internet"
+        ],
+        "support": 0.1886,
+        "confidence": 0.5602,
+        "lift": 1.2751,
+        "leverage": 0.0407,
+        "conviction": 1.2748,
+        "strength": "Moderate",
+        "rule_text": "If Device Protection -> Then Fiber Optic Internet"
+      },
+      {
+        "antecedent": [
+          "Fiber Optic Internet"
+        ],
+        "consequent": [
+          "Device Protection"
+        ],
+        "support": 0.1886,
+        "confidence": 0.4293,
+        "lift": 1.2751,
+        "leverage": 0.0407,
+        "conviction": 1.1623,
+        "strength": "Moderate",
+        "rule_text": "If Fiber Optic Internet -> Then Device Protection"
+      },
+      {
+        "antecedent": [
+          "Online Backup",
+          "Phone Service"
+        ],
+        "consequent": [
+          "Streaming Movies"
+        ],
+        "support": 0.1552,
+        "confidence": 0.4996,
+        "lift": 1.2745,
+        "leverage": 0.0334,
+        "conviction": 1.2151,
+        "strength": "Moderate",
+        "rule_text": "If Online Backup + Phone Service -> Then Streaming Movies"
+      },
+      {
+        "antecedent": [
+          "Streaming Movies"
+        ],
+        "consequent": [
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "support": 0.1985,
+        "confidence": 0.5063,
+        "lift": 1.2743,
+        "leverage": 0.0427,
+        "conviction": 1.2207,
+        "strength": "Moderate",
+        "rule_text": "If Streaming Movies -> Then Fiber Optic Internet + Phone Service"
+      }
+    ]
+  },
+  "churn_patterns": {
+    "total_churn_rules": 115,
+    "total_retention_rules": 439,
+    "min_support": 0.04,
+    "min_confidence": 0.35,
+    "execution_time_seconds": 0.9121,
+    "churn_rules": [
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.0582,
+        "confidence": 0.7815,
+        "lift": 2.7811,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Payment: Electronic check -> Churned",
+        "churn_risk_level": "Critical Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Payment: Electronic check",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0468,
+        "confidence": 0.7188,
+        "lift": 2.5582,
+        "rule_text": "Contract: Month-to-month + Payment: Electronic check + Streaming TV -> Churned",
+        "churn_risk_level": "Critical Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Payment: Electronic check",
+          "Streaming Movies"
+        ],
+        "outcome": "Churned",
+        "support": 0.0477,
+        "confidence": 0.7111,
+        "lift": 2.5307,
+        "rule_text": "Contract: Month-to-month + Payment: Electronic check + Streaming Movies -> Churned",
+        "churn_risk_level": "Critical Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Device Protection",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.0412,
+        "confidence": 0.7062,
+        "lift": 2.5131,
+        "rule_text": "Contract: Month-to-month + Device Protection + Payment: Electronic check -> Churned",
+        "churn_risk_level": "Critical Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Online Backup",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.0403,
+        "confidence": 0.7031,
+        "lift": 2.5024,
+        "rule_text": "Contract: Month-to-month + Online Backup + Payment: Electronic check -> Churned",
+        "churn_risk_level": "Critical Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Paperless Billing"
+        ],
+        "outcome": "Churned",
+        "support": 0.0901,
+        "confidence": 0.6835,
+        "lift": 2.4326,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Paperless Billing -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0731,
+        "confidence": 0.6735,
+        "lift": 2.3967,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Streaming Movies"
+        ],
+        "outcome": "Churned",
+        "support": 0.0745,
+        "confidence": 0.6699,
+        "lift": 2.3839,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Streaming Movies -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Device Protection",
+          "Fiber Optic Internet"
+        ],
+        "outcome": "Churned",
+        "support": 0.0647,
+        "confidence": 0.6687,
+        "lift": 2.3798,
+        "rule_text": "Contract: Month-to-month + Device Protection + Fiber Optic Internet -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Multiple Lines"
+        ],
+        "outcome": "Churned",
+        "support": 0.0615,
+        "confidence": 0.6665,
+        "lift": 2.3718,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Multiple Lines -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Phone Service"
+        ],
+        "outcome": "Churned",
+        "support": 0.1331,
+        "confidence": 0.6636,
+        "lift": 2.3616,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Phone Service -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Online Backup"
+        ],
+        "outcome": "Churned",
+        "support": 0.0645,
+        "confidence": 0.6627,
+        "lift": 2.3583,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Online Backup -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet"
+        ],
+        "outcome": "Churned",
+        "support": 0.1463,
+        "confidence": 0.6595,
+        "lift": 2.3469,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Paperless Billing",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.0652,
+        "confidence": 0.6401,
+        "lift": 2.2779,
+        "rule_text": "Contract: Month-to-month + Paperless Billing + Payment: Electronic check -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Multiple Lines",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.0448,
+        "confidence": 0.6243,
+        "lift": 2.2219,
+        "rule_text": "Contract: Month-to-month + Multiple Lines + Payment: Electronic check -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Payment: Electronic check",
+          "Phone Service"
+        ],
+        "outcome": "Churned",
+        "support": 0.0966,
+        "confidence": 0.6202,
+        "lift": 2.2071,
+        "rule_text": "Contract: Month-to-month + Payment: Electronic check + Phone Service -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Online Security"
+        ],
+        "outcome": "Churned",
+        "support": 0.05,
+        "confidence": 0.6189,
+        "lift": 2.2024,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Online Security -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Payment: Electronic check"
+        ],
+        "outcome": "Churned",
+        "support": 0.106,
+        "confidence": 0.6167,
+        "lift": 2.1948,
+        "rule_text": "Contract: Month-to-month + Payment: Electronic check -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Paperless Billing",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0709,
+        "confidence": 0.6142,
+        "lift": 2.1857,
+        "rule_text": "Contract: Month-to-month + Paperless Billing + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Paperless Billing",
+          "Streaming Movies"
+        ],
+        "outcome": "Churned",
+        "support": 0.0726,
+        "confidence": 0.6128,
+        "lift": 2.1809,
+        "rule_text": "Contract: Month-to-month + Paperless Billing + Streaming Movies -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Device Protection",
+          "Paperless Billing"
+        ],
+        "outcome": "Churned",
+        "support": 0.0623,
+        "confidence": 0.6069,
+        "lift": 2.16,
+        "rule_text": "Contract: Month-to-month + Device Protection + Paperless Billing -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Online Backup",
+          "Paperless Billing"
+        ],
+        "outcome": "Churned",
+        "support": 0.0624,
+        "confidence": 0.604,
+        "lift": 2.1496,
+        "rule_text": "Contract: Month-to-month + Online Backup + Paperless Billing -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Streaming Movies",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0585,
+        "confidence": 0.601,
+        "lift": 2.1388,
+        "rule_text": "Contract: Month-to-month + Streaming Movies + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Multiple Lines",
+          "Streaming Movies"
+        ],
+        "outcome": "Churned",
+        "support": 0.0497,
+        "confidence": 0.5962,
+        "lift": 2.1217,
+        "rule_text": "Contract: Month-to-month + Multiple Lines + Streaming Movies -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Multiple Lines",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0476,
+        "confidence": 0.5931,
+        "lift": 2.1108,
+        "rule_text": "Contract: Month-to-month + Multiple Lines + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.1035,
+        "confidence": 0.5918,
+        "lift": 2.106,
+        "rule_text": "Contract: Month-to-month + Phone Service + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "outcome": "Churned",
+        "support": 0.1067,
+        "confidence": 0.5914,
+        "lift": 2.1048,
+        "rule_text": "Contract: Month-to-month + Phone Service + Streaming Movies -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Device Protection",
+          "Streaming TV"
+        ],
+        "outcome": "Churned",
+        "support": 0.0498,
+        "confidence": 0.591,
+        "lift": 2.1034,
+        "rule_text": "Contract: Month-to-month + Device Protection + Streaming TV -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Fiber Optic Internet",
+          "Tech Support"
+        ],
+        "outcome": "Churned",
+        "support": 0.0488,
+        "confidence": 0.591,
+        "lift": 2.1033,
+        "rule_text": "Contract: Month-to-month + Fiber Optic Internet + Tech Support -> Churned",
+        "churn_risk_level": "High Risk"
+      },
+      {
+        "antecedent": [
+          "Contract: Month-to-month",
+          "Device Protection",
+          "Online Backup"
+        ],
+        "outcome": "Churned",
+        "support": 0.0449,
+        "confidence": 0.5902,
+        "lift": 2.1005,
+        "rule_text": "Contract: Month-to-month + Device Protection + Online Backup -> Churned",
+        "churn_risk_level": "High Risk"
+      }
+    ],
+    "retention_rules": [
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Bank transfer"
+        ],
+        "outcome": "Retained",
+        "support": 0.0465,
+        "confidence": 0.9841,
+        "lift": 1.3687,
+        "rule_text": "Contract: Two year + Payment: Bank transfer -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Bank transfer",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0421,
+        "confidence": 0.9838,
+        "lift": 1.3682,
+        "rule_text": "Contract: Two year + Payment: Bank transfer + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Credit card"
+        ],
+        "outcome": "Retained",
+        "support": 0.0474,
+        "confidence": 0.9807,
+        "lift": 1.3639,
+        "rule_text": "Contract: Two year + Payment: Credit card -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Credit card",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0429,
+        "confidence": 0.98,
+        "lift": 1.3629,
+        "rule_text": "Contract: Two year + Payment: Credit card + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "DSL Internet"
+        ],
+        "outcome": "Retained",
+        "support": 0.0734,
+        "confidence": 0.9799,
+        "lift": 1.3629,
+        "rule_text": "Contract: Two year + DSL Internet -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "DSL Internet",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0662,
+        "confidence": 0.9794,
+        "lift": 1.3622,
+        "rule_text": "Contract: Two year + DSL Internet + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "DSL Internet",
+          "Paperless Billing"
+        ],
+        "outcome": "Retained",
+        "support": 0.044,
+        "confidence": 0.9776,
+        "lift": 1.3596,
+        "rule_text": "Contract: Two year + DSL Internet + Paperless Billing -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Mailed check"
+        ],
+        "outcome": "Retained",
+        "support": 0.0485,
+        "confidence": 0.9738,
+        "lift": 1.3544,
+        "rule_text": "Contract: Two year + Payment: Mailed check -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Payment: Mailed check",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0433,
+        "confidence": 0.9737,
+        "lift": 1.3542,
+        "rule_text": "Contract: Two year + Payment: Mailed check + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Tech Support"
+        ],
+        "outcome": "Retained",
+        "support": 0.0618,
+        "confidence": 0.9715,
+        "lift": 1.3512,
+        "rule_text": "Contract: Two year + Tech Support -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Phone Service",
+          "Tech Support"
+        ],
+        "outcome": "Retained",
+        "support": 0.0553,
+        "confidence": 0.9709,
+        "lift": 1.3504,
+        "rule_text": "Contract: Two year + Phone Service + Tech Support -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year"
+        ],
+        "outcome": "Retained",
+        "support": 0.2136,
+        "confidence": 0.9705,
+        "lift": 1.3498,
+        "rule_text": "Contract: Two year -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.193,
+        "confidence": 0.9699,
+        "lift": 1.3489,
+        "rule_text": "Contract: Two year + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Multiple Lines"
+        ],
+        "outcome": "Retained",
+        "support": 0.09,
+        "confidence": 0.969,
+        "lift": 1.3478,
+        "rule_text": "Contract: Two year + Multiple Lines -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Multiple Lines",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.09,
+        "confidence": 0.969,
+        "lift": 1.3478,
+        "rule_text": "Contract: Two year + Multiple Lines + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Online Security"
+        ],
+        "outcome": "Retained",
+        "support": 0.0606,
+        "confidence": 0.9682,
+        "lift": 1.3466,
+        "rule_text": "Contract: Two year + Online Security -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Online Security",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0544,
+        "confidence": 0.9666,
+        "lift": 1.3444,
+        "rule_text": "Contract: Two year + Online Security + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Paperless Billing"
+        ],
+        "outcome": "Retained",
+        "support": 0.1261,
+        "confidence": 0.9663,
+        "lift": 1.344,
+        "rule_text": "Contract: Two year + Paperless Billing -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Paperless Billing",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.1141,
+        "confidence": 0.9656,
+        "lift": 1.3429,
+        "rule_text": "Contract: Two year + Paperless Billing + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Online Backup"
+        ],
+        "outcome": "Retained",
+        "support": 0.0729,
+        "confidence": 0.9642,
+        "lift": 1.341,
+        "rule_text": "Contract: Two year + Online Backup -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Multiple Lines",
+          "Paperless Billing"
+        ],
+        "outcome": "Retained",
+        "support": 0.0536,
+        "confidence": 0.9636,
+        "lift": 1.3401,
+        "rule_text": "Contract: Two year + Multiple Lines + Paperless Billing -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Online Backup",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0661,
+        "confidence": 0.9635,
+        "lift": 1.34,
+        "rule_text": "Contract: Two year + Online Backup + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Device Protection"
+        ],
+        "outcome": "Retained",
+        "support": 0.0705,
+        "confidence": 0.9631,
+        "lift": 1.3394,
+        "rule_text": "Contract: Two year + Device Protection -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Streaming Movies"
+        ],
+        "outcome": "Retained",
+        "support": 0.0825,
+        "confidence": 0.9629,
+        "lift": 1.3392,
+        "rule_text": "Contract: Two year + Streaming Movies -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Device Protection",
+          "Phone Service"
+        ],
+        "outcome": "Retained",
+        "support": 0.0641,
+        "confidence": 0.962,
+        "lift": 1.3379,
+        "rule_text": "Contract: Two year + Device Protection + Phone Service -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Phone Service",
+          "Streaming Movies"
+        ],
+        "outcome": "Retained",
+        "support": 0.074,
+        "confidence": 0.9619,
+        "lift": 1.3378,
+        "rule_text": "Contract: Two year + Phone Service + Streaming Movies -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Streaming TV"
+        ],
+        "outcome": "Retained",
+        "support": 0.081,
+        "confidence": 0.9603,
+        "lift": 1.3355,
+        "rule_text": "Contract: Two year + Streaming TV -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Phone Service",
+          "Streaming TV"
+        ],
+        "outcome": "Retained",
+        "support": 0.0728,
+        "confidence": 0.9593,
+        "lift": 1.3343,
+        "rule_text": "Contract: Two year + Phone Service + Streaming TV -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Online Backup",
+          "Paperless Billing"
+        ],
+        "outcome": "Retained",
+        "support": 0.0435,
+        "confidence": 0.9592,
+        "lift": 1.3341,
+        "rule_text": "Contract: Two year + Online Backup + Paperless Billing -> Retained",
+        "retention_strength": "Very Strong"
+      },
+      {
+        "antecedent": [
+          "Contract: Two year",
+          "Device Protection",
+          "Paperless Billing"
+        ],
+        "outcome": "Retained",
+        "support": 0.0416,
+        "confidence": 0.9585,
+        "lift": 1.3331,
+        "rule_text": "Contract: Two year + Device Protection + Paperless Billing -> Retained",
+        "retention_strength": "Very Strong"
+      }
+    ]
+  },
+  "available_services": [
+    "Phone Service",
+    "Multiple Lines",
+    "Fiber Optic Internet",
+    "DSL Internet",
+    "Online Security",
+    "Online Backup",
+    "Device Protection",
+    "Tech Support",
+    "Streaming TV",
+    "Streaming Movies"
+  ],
+  "generated_timestamp": "2026-11-02 23:32:32"
+}
