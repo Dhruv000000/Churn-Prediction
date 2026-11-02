@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   AlertTriangle,
-  ShieldCheck,
-  ShieldAlert,
   Sparkles,
   Zap,
-  TrendingDown,
   User,
   CreditCard,
-  Wifi,
-  LifeBuoy,
   RotateCcw,
   CheckCircle2,
   Clock,
-  ArrowRight
+  Cpu,
 } from 'lucide-react';
 import { predictCustomer } from '../api/client';
+
+const ALGORITHM_OPTIONS = [
+  'Random Forest',
+  'XGBoost',
+  'LightGBM',
+  'Logistic Regression'
+];
 
 const PRESET_SCENARIOS = [
   {
@@ -90,6 +92,7 @@ const PRESET_SCENARIOS = [
 
 export default function ChurnPredictor() {
   const [form, setForm] = useState({
+    model_name: 'Random Forest',
     tenure_months: 6,
     monthly_charges: 78.5,
     contract: 'Month-to-month',
@@ -141,15 +144,25 @@ export default function ChurnPredictor() {
 
   const probabilityPct = prediction ? Math.round(prediction.churn_probability * 100) : 0;
 
-  // Determine risk theme colors
-  const isHighRisk = probabilityPct >= 50;
-  const isModerateRisk = probabilityPct >= 25 && probabilityPct < 50;
+  // Determine risk theme colors & tiers
+  const rawTier = prediction?.churn_risk_tier?.toLowerCase() || '';
+  const isCriticalRisk = rawTier === 'critical' || probabilityPct >= 85;
+  const isHighRisk = isCriticalRisk || rawTier === 'high' || probabilityPct >= 60;
+  const isModerateRisk = !isHighRisk && (rawTier === 'moderate' || (probabilityPct >= 30 && probabilityPct < 60));
+
   const riskColor = isHighRisk ? 'var(--color-pink)' : isModerateRisk ? 'var(--color-text-secondary)' : 'var(--color-charcoal)';
-  const riskTierLabel = isHighRisk ? 'CRITICAL RISK' : isModerateRisk ? 'MODERATE RISK' : 'LOW RISK';
+  const riskTierLabel = isCriticalRisk
+    ? 'CRITICAL RISK'
+    : isHighRisk
+    ? 'HIGH RISK'
+    : isModerateRisk
+    ? 'MODERATE RISK'
+    : 'LOW RISK';
+
   const riskPillClass = isHighRisk
     ? 'bg-pink-500/15 text-pink-400 border-pink-500/40'
     : isModerateRisk
-    ? 'bg-zinc-500/15 text-zinc-400 border-zinc-500/40'
+    ? 'bg-zinc-500/15 text-zinc-300 border-zinc-500/40'
     : 'bg-zinc-500/15 text-zinc-400 border-zinc-500/40';
 
   const tenureStage =
@@ -158,6 +171,7 @@ export default function ChurnPredictor() {
       : form.tenure_months <= 48
       ? 'Mid-cycle'
       : 'Veteran';
+
   const profileSummaryGroups = [
     {
       title: 'Subscription',
@@ -194,14 +208,37 @@ export default function ChurnPredictor() {
   return (
     <div className="w-full min-w-0 space-y-6 animate-fadeIn">
       {/* Title */}
-      <div>
-        <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
-          Supervised Machine Learning • Balanced Random Forest Classifier
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">
+            Supervised Machine Learning • {prediction?.model_used || form.model_name} Classifier
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-white flex items-center space-x-3">
+            <span>Real-Time Churn Predictor & Retention Simulator</span>
+          </h1>
         </div>
-        <h1 className="text-2xl font-black tracking-tight text-white flex items-center space-x-3">
-          <span>Real-Time Churn Predictor & Retention Simulator</span>
-        </h1>
-       
+
+        {/* Algorithm Selection Pills */}
+        <div className="flex items-center space-x-1.5 bg-zinc-900/80 p-1.5 rounded-xl border border-zinc-800/80">
+          <Cpu className="w-3.5 h-3.5 text-pink-400 ml-1.5 mr-0.5" />
+          <span className="text-[11px] font-semibold text-zinc-400 mr-1 hidden sm:inline">Engine:</span>
+          {ALGORITHM_OPTIONS.map((algo) => {
+            const isSelected = form.model_name === algo;
+            return (
+              <button
+                key={algo}
+                onClick={() => updateField('model_name', algo)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${
+                  isSelected
+                    ? 'border-pink-500/50 bg-pink-500/20 text-pink-300 shadow-sm'
+                    : 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700'
+                }`}
+              >
+                {algo}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Preset Scenarios */}
@@ -235,6 +272,7 @@ export default function ChurnPredictor() {
             <button
               onClick={() =>
                 setForm({
+                  model_name: form.model_name,
                   tenure_months: 12,
                   monthly_charges: 65,
                   contract: 'Month-to-month',
@@ -445,9 +483,9 @@ export default function ChurnPredictor() {
             </div>
           </div>
 
-          <section className="border-t border-zinc-200 pt-5" aria-labelledby="customer-profile-summary">
+          <section className="border-t border-zinc-800/80 pt-5" aria-labelledby="customer-profile-summary">
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <h3 id="customer-profile-summary" className="text-sm font-bold text-zinc-800">
+              <h3 id="customer-profile-summary" className="text-sm font-bold text-zinc-200">
                 Customer Profile Summary
               </h3>
               <span className="text-[11px] text-zinc-500">Current input selections</span>
@@ -463,10 +501,10 @@ export default function ChurnPredictor() {
                     {group.rows.map(([label, value], index) => (
                       <div
                         key={label}
-                        className={`flex min-w-0 items-start justify-between gap-2 py-1.5 ${index < group.rows.length - 1 ? 'border-b border-zinc-200' : ''}`}
+                        className={`flex min-w-0 items-start justify-between gap-2 py-1.5 ${index < group.rows.length - 1 ? 'border-b border-zinc-800/60' : ''}`}
                       >
-                        <dt className="min-w-0 text-[11px] leading-relaxed text-zinc-500">{label}</dt>
-                        <dd className="min-w-0 break-words text-right text-[11px] font-medium leading-relaxed text-zinc-800">
+                        <dt className="min-w-0 text-[11px] leading-relaxed text-zinc-400">{label}</dt>
+                        <dd className="min-w-0 break-words text-right text-[11px] font-medium leading-relaxed text-zinc-200">
                           {value}
                         </dd>
                       </div>
@@ -552,6 +590,53 @@ export default function ChurnPredictor() {
               </div>
             </div>
 
+            {/* Dynamic Retention Discount Engine Section */}
+            <div className="p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 space-y-2.5">
+              <div className="flex items-center justify-between border-b border-zinc-800/70 pb-2">
+                <div className="flex items-center space-x-2 text-xs font-bold text-zinc-200 uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+                  <span>Dynamic Retention Discount</span>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold border border-pink-500/40 bg-pink-500/10 text-pink-400">
+                  {prediction?.discount_percentage !== undefined
+                    ? `${prediction.discount_percentage.toFixed(0)}% DISCOUNT`
+                    : '0% DISCOUNT'}
+                </span>
+              </div>
+
+              {/* Bill Comparison Grid */}
+              <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-center">
+                <div className="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80">
+                  <span className="text-[10px] text-zinc-400 font-sans block uppercase font-semibold">Standard Bill</span>
+                  <span className="text-sm font-bold text-zinc-300">
+                    ${form.monthly_charges.toFixed(2)}/mo
+                  </span>
+                </div>
+                <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/30">
+                  <span className="text-[10px] text-pink-400/90 font-sans block uppercase font-semibold">Discounted Bill</span>
+                  <span className="text-sm font-bold text-pink-300">
+                    ${prediction?.discounted_monthly_charges !== undefined
+                      ? prediction.discounted_monthly_charges.toFixed(2)
+                      : form.monthly_charges.toFixed(2)}/mo
+                  </span>
+                </div>
+              </div>
+
+              {prediction?.monthly_savings > 0 && (
+                <div className="flex items-center justify-between text-xs px-1 text-zinc-400 font-sans">
+                  <span>Targeted Monthly Savings:</span>
+                  <span className="font-mono font-bold text-pink-400">
+                    Save ${prediction.monthly_savings.toFixed(2)}/mo
+                  </span>
+                </div>
+              )}
+
+              <p className="text-[11px] text-zinc-400 leading-snug pt-0.5 font-sans">
+                {prediction?.retention_tier_rationale ||
+                  'Evaluating calibrated retention discount tier...'}
+              </p>
+            </div>
+
             {/* Key Contributing Risk Factors */}
             <div className="space-y-2 pt-2 border-t border-zinc-800/80">
               <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
@@ -600,5 +685,3 @@ export default function ChurnPredictor() {
     </div>
   );
 }
-
-

@@ -36,7 +36,7 @@ def run_api_tests():
 
     client = TestClient(app)
     tests_passed = 0
-    total_tests = 8
+    total_tests = 10
     summary_results = []
 
     # -------------------------------------------------------------------------
@@ -131,9 +131,9 @@ def run_api_tests():
     if status7 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
-    # TEST 8: Real-Time Churn Scoring (High-Risk Profile)
+    # TEST 8: Real-Time Churn Scoring & Dynamic Discount Engine (High-Risk Profile)
     # -------------------------------------------------------------------------
-    print("\n[TEST 8] POST /api/mining/predict (Real-Time Customer Scoring)")
+    print("\n[TEST 8] POST /api/mining/predict (Real-Time Customer Scoring & Dynamic Discount)")
     high_risk_payload = {
         "tenure_months": 2,
         "monthly_charges": 89.50,
@@ -153,19 +153,63 @@ def run_api_tests():
         "multiple_lines": "No",
         "online_backup": "No",
         "device_protection": "No",
-        "paperless_billing": "Yes"
+        "paperless_billing": "Yes",
+        "model_name": "Random Forest"
     }
 
     r8 = client.post("/api/mining/predict", json=high_risk_payload)
     d8 = r8.json()
-    status8 = "[PASS]" if r8.status_code == 200 and d8.get("churn_probability", 0) > 0.60 else "[FAIL]"
+    status8 = "[PASS]" if r8.status_code == 200 and d8.get("churn_probability", 0) > 0.60 and "discount_percentage" in d8 else "[FAIL]"
     print(f"  Status : {r8.status_code} {status8}")
     print(f"  Payload: Churn Probability: {d8.get('churn_probability') * 100:.2f}% | Risk Tier: '{d8.get('churn_risk_tier')}' | Prediction: {d8.get('churn_prediction')}")
-    print(f"           Persona: '{d8.get('cluster_persona')}'")
-    print(f"           Key Risk Factors: {d8.get('risk_factors')[:2]}")
-    print(f"           Prescription: {d8.get('recommended_retention_action')}")
-    summary_results.append(("POST /api/mining/predict", r8.status_code, f"Prob: {d8.get('churn_probability')*100:.1f}%, Tier: {d8.get('churn_risk_tier')}", status8))
+    print(f"           Discount Engine: {d8.get('discount_percentage')}% off (${d8.get('original_monthly_charges')}/mo -> ${d8.get('discounted_monthly_charges')}/mo, Save: ${d8.get('monthly_savings')}/mo)")
+    print(f"           Rationale: {d8.get('retention_tier_rationale')}")
+    summary_results.append(("POST /api/mining/predict (High Risk)", r8.status_code, f"Prob: {d8.get('churn_probability')*100:.1f}%, Disc: {d8.get('discount_percentage')}%", status8))
     if status8 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 9: Algorithm Suite Benchmarking & Model Selection
+    # -------------------------------------------------------------------------
+    print("\n[TEST 9] GET /api/mining/metrics?model=XGBoost (Multi-Algorithm Comparative Benchmarks)")
+    r9 = client.get("/api/mining/metrics?model=XGBoost")
+    d9 = r9.json()
+    has_comparison = len(d9.get("models_comparison", [])) >= 4
+    status9 = "[PASS]" if r9.status_code == 200 and d9.get("selected_model") == "XGBoost" and has_comparison else "[FAIL]"
+    print(f"  Status : {r9.status_code} {status9}")
+    print(f"  Payload: Selected: '{d9.get('selected_model')}' | ROC-AUC: {d9.get('roc_auc')} | F1: {d9.get('f1_score')*100:.2f}%")
+    print("           Benchmarked Models:")
+    for comp in d9.get("models_comparison", []):
+        star = " ★ CHAMPION" if comp.get("is_best") else ""
+        print(f"           - {comp.get('model_name').ljust(20)}: ROC-AUC={comp.get('roc_auc'):.4f}, F1={comp.get('f1_score')*100:.2f}%{star}")
+    summary_results.append(("GET /api/mining/metrics (XGBoost)", r9.status_code, f"4 models benchmarked", status9))
+    if status9 == "[PASS]": tests_passed += 1
+
+    # -------------------------------------------------------------------------
+    # TEST 10: Dynamic Discount Engine Range Validation (Low Risk: 0% Discount)
+    # -------------------------------------------------------------------------
+    print("\n[TEST 10] POST /api/mining/predict (Low Risk: 0% Discount Validation)")
+    low_risk_payload = {
+        "tenure_months": 65,
+        "monthly_charges": 25.00,
+        "contract": "Two year",
+        "internet_service": "DSL",
+        "payment_method": "Credit card (automatic)",
+        "tech_support": "Yes",
+        "online_security": "Yes",
+        "partner": "Yes",
+        "dependents": "Yes",
+        "paperless_billing": "No",
+        "model_name": "XGBoost"
+    }
+    r10 = client.post("/api/mining/predict", json=low_risk_payload)
+    d10 = r10.json()
+    is_low_prob = d10.get("churn_probability", 1.0) < 0.30
+    is_zero_discount = d10.get("discount_percentage") == 0.0
+    status10 = "[PASS]" if r10.status_code == 200 and is_low_prob and is_zero_discount else "[FAIL]"
+    print(f"  Status : {r10.status_code} {status10}")
+    print(f"  Payload: Churn Prob: {d10.get('churn_probability')*100:.2f}% | Tier: '{d10.get('churn_risk_tier')}' | Discount: {d10.get('discount_percentage')}% | Bill: ${d10.get('discounted_monthly_charges')}/mo")
+    summary_results.append(("POST /api/mining/predict (Low Risk)", r10.status_code, f"Prob: {d10.get('churn_probability')*100:.1f}%, Disc: 0%", status10))
+    if status10 == "[PASS]": tests_passed += 1
 
     # -------------------------------------------------------------------------
     # FINAL RESULTS MATRIX

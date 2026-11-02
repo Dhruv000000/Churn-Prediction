@@ -6,11 +6,19 @@ echo ===========================================================================
 echo      ENTERPRISE CHURN FORENSICS ^& PREDICTIVE RETENTION WAREHOUSE
 echo ===============================================================================
 echo.
+
+set "PY_EXEC=python"
+if exist "%~dp0.venv\Scripts\python.exe" (
+    set "PY_EXEC=%~dp0.venv\Scripts\python.exe"
+) else if exist "%~dp0backend\venv\Scripts\python.exe" (
+    set "PY_EXEC=%~dp0backend\venv\Scripts\python.exe"
+)
+
 echo [1/3] Starting FastAPI Analytical Backend on Port 8000...
-start "Churn Forensics - Backend API (Port 8000)" cmd /k "cd /d %~dp0backend && ..\backend\venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "Churn Forensics - Backend API (Port 8000)" cmd /k "cd /d "%~dp0backend" && "%PY_EXEC%" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 echo [2/3] Starting React Executive Dashboard on Port 5173...
-start "Churn Forensics - Frontend Dashboard (Port 5173)" cmd /k "cd /d %~dp0frontend && npm run dev"
+start "Churn Forensics - Frontend Dashboard (Port 5173)" cmd /k "cd /d "%~dp0frontend" && npm run dev"
 
 echo [3/3] Waiting for servers to initialize...
 timeout /t 4 /nobreak >nul
