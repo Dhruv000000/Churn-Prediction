@@ -1022,3 +1022,4 @@ export default function MarketBasketStudio() {
     </div>
   );
 }
+

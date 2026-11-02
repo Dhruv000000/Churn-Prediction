@@ -280,3 +280,4 @@ def export_rules_to_csv() -> str:
         ])
 
     return output.getvalue()
+

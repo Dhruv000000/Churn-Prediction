@@ -132,3 +132,4 @@ def export_rules():
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=association_rules.csv"}
     )
+

@@ -605,3 +605,4 @@ if __name__ == "__main__":
     print("[INITIALIZATION] Extracting Star Schema records from Analytical Warehouse...")
     df_wh = extract_warehouse_data()
     run_and_save_apriori_artifacts(df_wh)
+
